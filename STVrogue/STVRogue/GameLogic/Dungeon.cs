@@ -14,6 +14,7 @@ namespace STVRogue.GameLogic
         public uint difficultyLevel;
         /* a constant multiplier that determines the maximum number of monster-packs per node: */
         public uint M;
+        private Bridge[] bridges;
 
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
         public Dungeon(uint level, uint nodeCapacityMultiplier)
@@ -25,18 +26,58 @@ namespace STVRogue.GameLogic
         }
 
         /* Return a shortest path between node u and node v */
-        public List<Node> shortestpath(Node u, Node v) { throw new NotImplementedException(); }
+        public List<Node> shortestpath(Node u, Node v)
+        {
+            var queue = new Queue<Node>();
+            var dict = new Dictionary<Node, Node>();
+            var visited = new HashSet<Node>();
+            queue.Enqueue(v);
+            while (queue.Count > 0)
+            {
+                Node n = queue.Dequeue();
+                foreach (Node m in n.neighbors)
+                    if (!visited.Contains(m))
+                    {
+                        dict[m] = n;
+                        if (m == u)
+                        {
+                            var result = new List<Node>();
+                            Node a = u;
+                            while (a != v)
+                            {
+                                result.Add(a);
+                                a = dict[a];
+                            }
+                            result.Add(v);
+                            return result;
+                        }
+                        queue.Enqueue(m);
+                        visited.Add(m);
+                    }
+            }
+            return null;
+        }
 
 
         /* To disconnect a bridge from the rest of the zone the bridge is in. */
         public void disconnect(Bridge b)
         {
             Logger.log("Disconnecting the bridge " + b.id + " from its zone.");
-            throw new NotImplementedException();
+            b.neighbors = b.neighbors.Except(b.fromNodes).ToList();
+            b.fromNodes.Clear();
+            startNode = b;
         }
 
         /* To calculate the level of the given node. */
-        public uint level(Node d) { throw new NotImplementedException(); }
+        public uint level(Node d) {
+            if (d is Bridge)
+            {
+                for (uint i = 0; i < bridges.Length; i++)
+                    if (bridges[i] == d)
+                        return i + 1;
+            }
+            return 0;
+        }
     }
 
     public class Node
@@ -74,8 +115,8 @@ namespace STVRogue.GameLogic
 
     public class Bridge : Node
     {
-        List<Node> fromNodes = new List<Node>();
-        List<Node> toNodes = new List<Node>();
+        public List<Node> fromNodes = new List<Node>();
+        public List<Node> toNodes = new List<Node>();
         public Bridge(String id) : base(id) { }
 
         /* Use this to connect the bridge to a node from the same zone. */
