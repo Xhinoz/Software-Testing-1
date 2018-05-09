@@ -36,7 +36,7 @@ namespace STVRogue.GameLogic
         }
 
         /* Move the pack to an adjacent node. */
-        public void move(Node u)
+        public bool move(Node u)
         {
             if (!location.neighbors.Contains(u)) throw new ArgumentException();
             int capacity = (int) (dungeon.M * (dungeon.level(u) + 1));
@@ -48,12 +48,13 @@ namespace STVRogue.GameLogic
             if (members.Count > capacity)
             {
                 Logger.log("Pack " + id + " is trying to move to a full node " + u.id + ", but this would cause the node to exceed its capacity. Rejected.");
-                return;
+                return false;
             }
+            location.packs.Remove(this); // Remove pack from current node
             location = u;
             u.packs.Add(this);
-            Logger.log("Pack " + id + " moves to an already full node " + u.id + ". Rejected.");
-
+            Logger.log("Pack " + id + " moves to an already full node " + u.id + ". Rejected. Actually succesful?");
+            return true;
         }
 
         /* Move the pack one node further along a shortest path to u. */
