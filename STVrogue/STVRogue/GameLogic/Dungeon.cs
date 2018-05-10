@@ -146,8 +146,8 @@ namespace STVRogue.GameLogic
                         //Item item = player.bag[t];
                         if (player.bag.Count != 0)
                         {
-                            random = RandomGenerator.rnd.Next(player.bag.Count);
-                            Item item = player.bag[random];
+                            int rand = RandomGenerator.rnd.Next(player.bag.Count);
+                            Item item = player.bag[rand];
                             player.use(item);
                         }
                         goto case 2; // Continue to Attack
