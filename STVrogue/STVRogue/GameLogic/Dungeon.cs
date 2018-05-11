@@ -15,6 +15,7 @@ namespace STVRogue.GameLogic
         /* a constant multiplier that determines the maximum number of monster-packs per node: */
         public uint M;
         private Bridge[] bridges;
+        private Random rng;
 
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
         public Dungeon(uint level, uint nodeCapacityMultiplier)
@@ -22,7 +23,54 @@ namespace STVRogue.GameLogic
             Logger.log("Creating a dungeon of difficulty level " + level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
             difficultyLevel = level;
             M = nodeCapacityMultiplier;
+            rng = new Random();
             throw new NotImplementedException();
+        }
+
+        /*Tuple contains the end bridge, the remaining connections from that bridge,
+         the amount of nodes, and the total amount of connections.*/
+        private Tuple<Bridge, int, int, int> makeSection(Node start, int startc, int level)
+        {
+            HashSet<int> open = new HashSet<int>();
+            List<Node> nodes = new List<Node>();
+            List<int> conns = new List<int>();
+            int totalConns = 0;
+            open.Add(0);
+            nodes.Add(start);
+            conns.Add(startc);
+            int index;
+            while (open.Count > 1 || open.Contains(0))
+            {
+                Node n = new Node();
+                index = nodes.Count;
+                open.Add(index);
+                nodes.Add(n);
+                conns.Add(rng.Next(1, 5));
+                for (int i = 0; i < index; i++)
+                    if (open.Contains(i) && (open.Count > 2 || conns[i] + conns[index] > 2))
+                    {
+                        totalConns++;
+                        nodes[i].connect(n);
+                        conns[i]--;
+                        if (conns[i] == 0) open.Remove(i);
+                        conns[index]--;
+                        if (conns[index] == 0)
+                        {
+                            open.Remove(index);
+                            break;
+                        }
+                    }
+            }
+            if (start is Bridge bstart)
+                bstart.toNodes = bstart.neighbors.Except(bstart.fromNodes).ToList();
+            index = open.Single();
+            Bridge b = new Bridge(level.ToString());
+            foreach (Node n in nodes[index].neighbors)
+            {
+                b.connectToNodeOfSameZone(n);
+                n.disconnect(nodes[index]);
+            }
+            return Tuple.Create(b, conns[index], nodes.Count, totalConns);
         }
 
         /* Return a shortest path between node u and node v */
