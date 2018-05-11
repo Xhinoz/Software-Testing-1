@@ -26,12 +26,14 @@ namespace STVRogue.GameLogic
     public class Monster : Creature
     {
         public Pack pack;
+        public int totalHP;
 
         /* Create a monster with a random HP */
         public Monster(String id)
         {
             this.id = id; name = "Orc";
             HP = 1 + RandomGenerator.rnd.Next(6);
+            totalHP = HP;
         }
     }
 
