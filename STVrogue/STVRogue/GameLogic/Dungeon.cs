@@ -23,14 +23,40 @@ namespace STVRogue.GameLogic
             Logger.log("Creating a dungeon of difficulty level " + level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
             difficultyLevel = level;
             M = nodeCapacityMultiplier;
+            bridges = new Bridge[level];
             rng = new Random();
-            throw new NotImplementedException();
+            int nodes, conns;
+            do
+            {
+                Node start = startNode;
+                int startc = rng.Next(1, 5);
+                nodes = 1;
+                conns = 0;
+                for (int i = 1; i <= level + 1; i++)
+                {
+                    var result = makeSection(start, startc, level);
+                    if (i <= level) start = bridges[level - 1];
+                    startc = result.Item1;
+                    nodes += result.Item2;
+                    conns += result.Item3;
+                }
+            } while (conns / (double)nodes > 3);
         }
 
-        /*Tuple contains the end bridge, the remaining connections from that bridge,
+        /*Tuple contains the remaining connections from the bridge,
          the amount of nodes, and the total amount of connections.*/
-        private Tuple<Bridge, int, int, int> makeSection(Node start, int startc, int level)
+        private Tuple<int, int, int> makeSection(Node start, int startc, uint level)
         {
+            Bridge b = new Bridge(level.ToString());
+            if (startc == 1) //can only be directly connected to a bridge
+            {
+                b.connectToNodeOfSameZone(start);
+                (start as Bridge)?.connectToNodeOfNextZone(b);
+                if (level > difficultyLevel)
+                    exitNode = b;
+                else bridges[level - 1] = b;
+                return Tuple.Create(1, 1, 1);
+            }
             HashSet<int> open = new HashSet<int>();
             List<Node> nodes = new List<Node>();
             List<int> conns = new List<int>();
@@ -64,13 +90,15 @@ namespace STVRogue.GameLogic
             if (start is Bridge bstart)
                 bstart.toNodes = bstart.neighbors.Except(bstart.fromNodes).ToList();
             index = open.Single();
-            Bridge b = new Bridge(level.ToString());
             foreach (Node n in nodes[index].neighbors)
             {
                 b.connectToNodeOfSameZone(n);
                 n.disconnect(nodes[index]);
             }
-            return Tuple.Create(b, conns[index], nodes.Count, totalConns);
+            if (level > difficultyLevel)
+                exitNode = b;
+            else bridges[level - 1] = b;
+            return Tuple.Create(conns[index], nodes.Count - 1, totalConns);
         }
 
         /* Return a shortest path between node u and node v */
