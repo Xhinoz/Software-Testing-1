@@ -28,5 +28,72 @@ namespace STVRogue.GameLogic
             P.use(x);
             Assert.IsFalse(P.bag.Contains(x));
         }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void MSTest_attackExcept()
+        {
+            Node n = new Node();
+            Player player = new Player();
+            Player player2 = new Player();
+            player.Attack(player2);
+        }
+
+        [TestMethod]
+        public void MSTest_player_normal_attack()
+        {
+            Node n = new Node();
+            Player player = new Player();
+            Pack pack = new Pack("Pack1", 5);
+            player.location = n;
+            pack.location = n;
+
+            Monster monster = pack.members[0];
+            monster.HP = 6;
+            player.Attack(monster);
+            Assert.IsTrue(monster.HP < 6);
+            player.Attack(monster); // Exception thrown?
+            Assert.IsTrue(pack.members.Count == 4);
+            Assert.IsTrue(player.KillPoint == 1);
+        }
+        [TestMethod]
+        public void MSTest_player_crystal_attack()
+        {
+            Player player = new Player();
+            Pack pack = new Pack("Gang", 5);
+            Item crystal = new Crystal("crystal");
+            player.bag.Add(crystal);
+            player.use(crystal);
+
+            Monster monster = pack.members[0];
+            Monster monster2 = pack.members[1];
+            monster.HP = 6; // Attack Rating Player + 1
+            monster2.HP = 5;
+            player.Attack(monster);
+            Assert.IsTrue(monster.HP < 6);
+            Assert.IsTrue(pack.members.Count < 5);
+        }
+
+        // Item class
+        [TestMethod]
+        public void MSTest_use_potion()
+        {
+            Player player = new Player();
+            Item potion = new HealingPotion("potion");
+            player.bag.Add(potion);
+            player.HP = 50;
+
+            player.use(potion);
+            Assert.IsTrue(player.HP > 50);
+        }
+
+        [TestMethod]
+        public void MSTest_use_crystal()
+        {
+            Player player = new Player();
+            Item crystal = new Crystal("crystal");
+            player.bag.Add(crystal);
+
+            // MORE
+        }
     }
 }
