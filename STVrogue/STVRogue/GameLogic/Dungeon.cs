@@ -183,13 +183,13 @@ namespace STVRogue.GameLogic
          * A fight terminates when either the node has no more monster-pack, or when
          * the player's HP is reduced to 0. 
          */
-        public void fight(Player player)
+        public void fight(Player player, int choice)
         {
             while (player.location == this && packs.Count != 0) // Contested
             {
                 // Choice?
                 // int choice = int.Parse(Console.ReadLine());
-                int choice = RandomGenerator.rnd.Next(3);
+                //int choice = RandomGenerator.rnd.Next(3);
 
                 switch (choice)
                 { // Flee
