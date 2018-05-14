@@ -19,6 +19,15 @@ namespace STVRogue.GameLogic
         }
 
         [TestMethod]
+        public void MSTest_pack_attack_stop()
+        {
+            Pack pack = new Pack("M'Baku", 110);
+            Player player = new Player();
+            pack.Attack(player);
+            Assert.IsTrue(player.HP == 0);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void MSTest_pack_moveException()
         {

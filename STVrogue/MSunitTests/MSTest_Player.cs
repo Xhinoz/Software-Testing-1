@@ -28,9 +28,10 @@ namespace STVRogue.GameLogic
             P.use(x);
             Assert.IsFalse(P.bag.Contains(x));
         }
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void MSTest_attackExcept()
+        public void MSTest_attackException()
         {
             Node n = new Node();
             Player player = new Player();
@@ -72,7 +73,6 @@ namespace STVRogue.GameLogic
             Assert.IsTrue(monster.HP < 6);
             Assert.IsTrue(pack.members.Count < 5);
         }
-
         // Item class
         [TestMethod]
         public void MSTest_use_potion()
@@ -94,6 +94,16 @@ namespace STVRogue.GameLogic
             player.bag.Add(crystal);
 
             // MORE
+        }
+
+        [TestMethod]
+        public void MSTest_used_item()
+        {
+            Player player = new Player();
+            Item item = new Item();
+            item.use(player);
+            item.use(player);
+            Assert.IsTrue(item.used);
         }
     }
 }
