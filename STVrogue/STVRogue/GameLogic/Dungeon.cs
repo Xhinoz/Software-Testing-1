@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using STVRogue.Utils;
 
 namespace STVRogue.GameLogic
@@ -25,6 +24,7 @@ namespace STVRogue.GameLogic
             M = nodeCapacityMultiplier;
             bridges = new Bridge[level];
             rng = new Random();
+            startNode = new Node();
             int nodes, conns;
             do
             {
@@ -55,7 +55,7 @@ namespace STVRogue.GameLogic
                 if (level > difficultyLevel)
                     exitNode = b;
                 else bridges[level - 1] = b;
-                return Tuple.Create(1, 1, 1);
+                return Tuple.Create(rng.Next(1, 4), 1, 1);
             }
             HashSet<int> open = new HashSet<int>();
             List<Node> nodes = new List<Node>();
@@ -90,10 +90,11 @@ namespace STVRogue.GameLogic
             if (start is Bridge bstart)
                 bstart.toNodes = bstart.neighbors.Except(bstart.fromNodes).ToList();
             index = open.Single();
-            foreach (Node n in nodes[index].neighbors)
+            var nb = nodes[index].neighbors;
+            while (nb.Count > 0)
             {
-                b.connectToNodeOfSameZone(n);
-                n.disconnect(nodes[index]);
+                b.connectToNodeOfSameZone(nb[0]);
+                nb[0].disconnect(nodes[index]);
             }
             if (level > difficultyLevel)
                 exitNode = b;

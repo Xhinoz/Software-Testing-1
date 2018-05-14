@@ -30,17 +30,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FsCheck, Version=2.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FsCheck.2.8.0\lib\net452\FsCheck.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="FsCheck, Version=2.10.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FsCheck.2.10.9\lib\net452\FsCheck.dll</HintPath>
     </Reference>
     <Reference Include="FsCheck.NUnit, Version=2.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FsCheck.NUnit.2.8.0\lib\net452\FsCheck.NUnit.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FSharp.Core, Version=4.3.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FSharp.Core.3.1.2.5\lib\net40\FSharp.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FSharp.Core.4.0.0.1\lib\net40\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=3.6.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.6.1\lib\net45\nunit.framework.dll</HintPath>
@@ -57,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Example_fscheckTest.cs" />
+    <Compile Include="NTest_Dungeon.cs" />
     <Compile Include="NTest_Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
