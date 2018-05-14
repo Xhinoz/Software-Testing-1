@@ -48,6 +48,7 @@ namespace STVRogue.GameLogic
         {
             id = "player";
             AttackRating = 5;
+            HP = HPbase;
         }
 
         public void use(Item item)
