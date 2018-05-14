@@ -45,14 +45,12 @@ namespace STVRogue.GameLogic
             Node n = new Node();
             Player player = new Player();
             Pack pack = new Pack("Pack1", 5);
-            player.location = n;
-            pack.location = n;
 
             Monster monster = pack.members[0];
             monster.HP = 6;
             player.Attack(monster);
             Assert.IsTrue(monster.HP < 6);
-            player.Attack(monster); // Exception thrown?
+            player.Attack(monster); // Exception thrown when killed?
             Assert.IsTrue(pack.members.Count == 4);
             Assert.IsTrue(player.KillPoint == 1);
         }
