@@ -15,7 +15,7 @@ namespace STVRogue.GameLogic
             attr *= 20;
             pack.Attack(player);
 
-            Assert.IsTrue(player.HP == (player.HPbase - attr));
+            Assert.AreEqual(player.HP, (player.HPbase - attr));
         }
 
         [TestMethod]
@@ -24,7 +24,7 @@ namespace STVRogue.GameLogic
             Pack pack = new Pack("M'Baku", 110);
             Player player = new Player();
             pack.Attack(player);
-            Assert.IsTrue(player.HP == 0);
+            Assert.AreEqual(player.HP, 0);
         }
 
         [TestMethod]

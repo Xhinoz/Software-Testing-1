@@ -44,6 +44,9 @@ namespace STVRogue.GameLogic
         public Boolean accelerated = false;
         public uint KillPoint = 0;
         public List<Item> bag = new List<Item>();
+        // Testing
+        private List<int> commands = new List<int>();
+        private int commanditerator = 0;
         public Player()
         {
             id = "player";
@@ -73,10 +76,10 @@ namespace STVRogue.GameLogic
             }
             else
             {
-                int packCount = foe_.pack.members.Count;
-                foe_.pack.members.RemoveAll(target => target.HP <= 0);
+                //int packCount = foe_.pack.members.Count;
+                //foe_.pack.members.RemoveAll(target => target.HP <= 0);
                 int packCount2 = foe_.pack.members.Count;
-                KillPoint += (uint) (packCount - packCount2);
+                //KillPoint += (uint) (packCount - packCount2);
                 // Fixed implementation?
                 for (int i = packCount2 - 1; i >= 0; i--)
                 {
@@ -84,12 +87,26 @@ namespace STVRogue.GameLogic
                     base.Attack(target);
                     if (target.HP == 0)
                     {
-                        foe_.pack.members.Remove(foe_);
+                        target.pack.members.Remove(target);
                         KillPoint++;
                     }
                 }
                 accelerated = false;
             }
+        }
+        // For testing 
+        public void AddNextCommand(int choice)
+        {
+            commands.Add(choice);
+        }
+        public void AddNextCommand(params int[] array)
+        {
+            for (int i = 0; i < array.Length; i++)
+                commands.Add(array[i]);
+        }
+        public int GetNextCommand()
+        {
+            return commands[commanditerator++];
         }
     }
 }

@@ -184,13 +184,14 @@ namespace STVRogue.GameLogic
          * A fight terminates when either the node has no more monster-pack, or when
          * the player's HP is reduced to 0. 
          */
-        public void fight(Player player, int choice)
+        public void fight(Player player)
         {
             while (player.location == this && packs.Count != 0) // Contested
             {
                 // Choice?
                 // int choice = int.Parse(Console.ReadLine());
                 //int choice = RandomGenerator.rnd.Next(3);
+                int choice = player.GetNextCommand();
 
                 switch (choice)
                 { // Flee
@@ -202,31 +203,51 @@ namespace STVRogue.GameLogic
                         break;
                     // Use item
                     case 1:
-                        // Choice?
-                        //bool potion = false;
-                        //int potion_pos;
-                        //bool crystal = false;
-                        //int crystal_pos;
-                        //for (int t = 0; t < player.bag.Count; t++)
-                        //{
-                        //    if (player.bag[t].GetType().Name == "HealingPotion")
-                        //    {
-                        //        potion = true;
-                        //        potion_pos = t;
-                        //    }
-                        //    if (player.bag[t].GetType().Name == "Crystal")
-                        //    {
-                        //        crystal = true;
-                        //        crystal_pos = t;
-                        //    }
-                        //}
-                        //Item item = player.bag[t];
-                        if (player.bag.Count != 0)
+                        // Choice
+                        int itemchoice;
+                        bool haspotion = false;
+                        int potion_pos = -1;
+                        bool hascrystal = false;
+                        int crystal_pos = -1;
+                        // Search for items in bag
+                        for (int t = 0; t < player.bag.Count; t++)
                         {
-                            int rand = RandomGenerator.rnd.Next(player.bag.Count);
-                            Item item = player.bag[rand];
-                            player.use(item);
+                            if (player.bag[t].GetType().Name == "HealingPotion")
+                            {
+                                haspotion = true;
+                                potion_pos = t;
+                            }
+                            if (player.bag[t].GetType().Name == "Crystal")
+                            {
+                                hascrystal = true;
+                                crystal_pos = t;
+                            }
                         }
+
+                        itemchoice = player.GetNextCommand();
+                        if (itemchoice == 0)
+                            if (haspotion)
+                            {
+                                Item potion = player.bag[potion_pos];
+                                player.use(potion);
+                            }
+                            else
+                                throw new ArgumentException();
+                        else if (itemchoice == 1)
+                            if (hascrystal)
+                            {
+                                Item crystal = player.bag[crystal_pos];
+                                player.use(crystal);
+                            }
+                            else
+                                throw new ArgumentException();
+
+                        //if (player.bag.Count != 0) // Replace or move?
+                        //{
+                        //    int rand = RandomGenerator.rnd.Next(player.bag.Count);
+                        //    Item item = player.bag[rand];
+                        //    player.use(item);
+                        //}
                         goto case 2; // Continue to Attack
 
                     // Attack
@@ -251,7 +272,8 @@ namespace STVRogue.GameLogic
                                 totalHP += monst.totalHP;
                             }
                             double flee_chance = (1 - HP / totalHP) / 2;
-                            bool flee = RandomGenerator.rnd.NextDouble() < flee_chance;
+                            // bool flee = RandomGenerator.rnd.NextDouble() < flee_chance; // Real implementation
+                            bool flee = player.GetNextCommand() == 1; // FOR TESTING ONLY
 
                             if (flee) // Fleeing
                             {
