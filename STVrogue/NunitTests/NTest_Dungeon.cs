@@ -14,8 +14,9 @@ namespace STVRogue.GameLogic
             Prop.ForAll<uint>(
                 n =>
                 {
-                    var d = new Dungeon(n, 1);
-                    return p.isValidDungeon(d.startNode, d.exitNode, n).
+                    uint m = n > 0 ? n : 1;
+                    var d = new Dungeon(m, 1);
+                    return p.isValidDungeon(d.startNode, d.exitNode, m).
                     When(n <= 1000);
                 }
             ).QuickCheckThrowOnFailure();

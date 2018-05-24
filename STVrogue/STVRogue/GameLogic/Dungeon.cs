@@ -19,11 +19,14 @@ namespace STVRogue.GameLogic
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
         public Dungeon(uint level, uint nodeCapacityMultiplier)
         {
+            if (level == 0)
+                throw new ArgumentException("Dungeon level must be at least 1.");
             Logger.log("Creating a dungeon of difficulty level " + level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
             difficultyLevel = level;
             M = nodeCapacityMultiplier;
             bridges = new Bridge[level];
-            rng = new Random();
+            //TODO: Remove seed when testing is done.
+            rng = new Random(42);
             startNode = new Node();
             int nodes, conns;
             do
@@ -53,7 +56,7 @@ namespace STVRogue.GameLogic
                 b.connectToNodeOfSameZone(start);
                 (start as Bridge)?.connectToNodeOfNextZone(b);
                 if (level > difficultyLevel)
-                    exitNode = b;
+                    exitNode = new Node(b);
                 else bridges[level - 1] = b;
                 return Tuple.Create(rng.Next(1, 4), 1, 1);
             }
@@ -97,13 +100,13 @@ namespace STVRogue.GameLogic
                 nb[0].disconnect(nodes[index]);
             }
             if (level > difficultyLevel)
-                exitNode = b;
+                exitNode = new Node(b);
             else bridges[level - 1] = b;
             return Tuple.Create(conns[index], nodes.Count - 1, totalConns);
         }
 
         /* Return a shortest path between node u and node v */
-        public List<Node> shortestpath(Node u, Node v)
+        public static List<Node> shortestpath(Node u, Node v)
         {
             var queue = new Queue<Node>();
             var dict = new Dictionary<Node, Node>();
@@ -166,6 +169,15 @@ namespace STVRogue.GameLogic
 
         public Node() { }
         public Node(String id) { this.id = id; }
+        
+        /*Because the exit node being a bridge is unacceptable.*/
+        public Node(Bridge b)
+        {
+            id = b.id;
+            neighbors = b.neighbors;
+            packs = b.packs;
+            items = b.items;
+        }
 
         /* To connect this node to another node. */
         public void connect(Node nd)
