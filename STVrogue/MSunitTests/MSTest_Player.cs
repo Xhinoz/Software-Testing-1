@@ -49,10 +49,10 @@ namespace STVRogue.GameLogic
             Monster monster = pack.members[0];
             monster.HP = 6;
             player.Attack(monster);
-            Assert.IsTrue(monster.HP < 6);
+            Assert.AreNotEqual(monster.HP, 6);
             player.Attack(monster); // Exception thrown when killed?
-            Assert.IsTrue(pack.members.Count == 4);
-            Assert.IsTrue(player.KillPoint == 1);
+            Assert.AreEqual(pack.members.Count, 4);
+            Assert.AreEqual(player.KillPoint, 1);
         }
         [TestMethod]
         public void MSTest_player_crystal_attack()
@@ -68,8 +68,8 @@ namespace STVRogue.GameLogic
             monster.HP = 6; // Attack Rating Player + 1
             monster2.HP = 5;
             player.Attack(monster);
-            Assert.IsTrue(monster.HP < 6);
-            Assert.IsTrue(pack.members.Count < 5);
+            Assert.AreNotEqual(monster.HP, 6);
+            Assert.AreNotEqual(pack.members.Count, 5);
         }
         // Item class
         [TestMethod]
@@ -81,7 +81,7 @@ namespace STVRogue.GameLogic
             player.HP = 50;
 
             player.use(potion);
-            Assert.IsTrue(player.HP > 50);
+            Assert.AreNotEqual(player.HP, 50);
         }
 
         [TestMethod]
@@ -90,8 +90,8 @@ namespace STVRogue.GameLogic
             Player player = new Player();
             Item crystal = new Crystal("crystal");
             player.bag.Add(crystal);
-
-            // MORE
+            player.use(crystal);
+            Assert.IsTrue(player.accelerated);
         }
 
         [TestMethod]

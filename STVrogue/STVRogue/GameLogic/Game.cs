@@ -70,6 +70,7 @@ namespace STVRogue.GameLogic
                                     tempsumMonsters++;
                                 }
                             }
+
                             if(tempsumMonsters > difficultyLevel * (dungeon.level(n) + 1))
                             {
                                 return false;
