@@ -225,7 +225,6 @@ namespace STVRogue.GameLogic
             while (player.location == this && packs.Count != 0) // Contested
             {
                 // Choice?
-                // int choice = int.Parse(Console.ReadLine());
                 //int choice = RandomGenerator.rnd.Next(3);
                 int choice = player.GetNextCommand();
 
