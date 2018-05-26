@@ -42,13 +42,38 @@ namespace STVRogue.GameLogic
         [TestMethod]
         public void MSTest_pack_move_fullcapacity()
         {
-            // Dungeon scenario full
-            // Assert.IsFalse(move);
+            Pack pack = new Pack("Hero", 3);
+            Pack pack2 = new Pack("Gatekeeper", 3);
+            Node node = new Node();
+            Node node2 = new Node();
+            Dungeon dungeon = new Dungeon(3, 3);
+            pack.location = node;
+            pack2.location = node2;
+            pack.dungeon = dungeon;
+            pack2.dungeon = dungeon;
+            node.packs.Add(pack);
+            node2.packs.Add(pack2);
+            node.neighbors.Add(node2);
+
+            pack.move(node2);
+            Assert.AreNotEqual(pack.location, node2);
+            Assert.AreEqual(pack.location, node);
         }
         [TestMethod]
         public void MSTest_pack_move_success()
         {
+            Pack pack = new Pack("Mover", 3);
+            Node node = new Node("node1");
+            Node node2 = new Node("node2");
+            Dungeon dungeon = new Dungeon(3, 3);
+            pack.location = node;
+            pack.dungeon = dungeon;
+            node.packs.Add(pack);
+            node.neighbors.Add(node2);
 
+            pack.move(node2);
+            Assert.AreNotEqual(pack.location, node);
+            Assert.AreEqual(pack.location, node2);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace STVRogue.GameLogic
         public Boolean accelerated = false;
         public uint KillPoint = 0;
         public List<Item> bag = new List<Item>();
-        // Testing
+        // For Testing
         private List<int> commands = new List<int>();
         private int commanditerator = 0;
         public Player()
@@ -80,7 +80,6 @@ namespace STVRogue.GameLogic
                 //foe_.pack.members.RemoveAll(target => target.HP <= 0);
                 int packCount2 = foe_.pack.members.Count;
                 //KillPoint += (uint) (packCount - packCount2);
-                // Fixed implementation?
                 for (int i = packCount2 - 1; i >= 0; i--)
                 {
                     Monster target = foe_.pack.members[i];

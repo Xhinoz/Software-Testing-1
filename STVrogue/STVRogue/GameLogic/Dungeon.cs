@@ -280,7 +280,7 @@ namespace STVRogue.GameLogic
                                 bool fled = false;
                                 int tried = 0;
                                 List<Node> temp_neighbours = new List<Node>(neighbors); // 
-                                while (!fled || tried != neighbors.Count) // Randomly chooses neighbours and tries to move
+                                while (!fled && tried != neighbors.Count) // Randomly chooses neighbours and tries to move
                                 {
                                     int rand_neighbour = RandomGenerator.rnd.Next(temp_neighbours.Count);
                                     fled = packs[rand_pack].move(temp_neighbours[rand_neighbour]);
