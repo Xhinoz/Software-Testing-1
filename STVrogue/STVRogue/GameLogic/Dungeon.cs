@@ -15,6 +15,7 @@ namespace STVRogue.GameLogic
         public uint M;
         private Bridge[] bridges;
         private Random rng;
+        private Predicates p = new Predicates();
 
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
         public Dungeon(uint level, uint nodeCapacityMultiplier)
@@ -27,7 +28,7 @@ namespace STVRogue.GameLogic
             bridges = new Bridge[level];
             //TODO: Remove seed when testing is done.
             rng = new Random(42);
-            startNode = new Node();
+            startNode = new Node("start");
             int nodes, conns;
             do
             {
@@ -35,10 +36,11 @@ namespace STVRogue.GameLogic
                 int startc = rng.Next(1, 5);
                 nodes = 1;
                 conns = 0;
-                for (int i = 1; i <= level + 1; i++)
+                int i = 1;
+                while (i <= level + 1)
                 {
-                    var result = makeSection(start, startc, level);
-                    if (i <= level) start = bridges[level - 1];
+                    var result = makeSection(start, startc, ref i);
+                    if (i <= level + 1) start = bridges[i - 2];
                     startc = result.Item1;
                     nodes += result.Item2;
                     conns += result.Item3;
@@ -48,16 +50,22 @@ namespace STVRogue.GameLogic
 
         /*Tuple contains the remaining connections from the bridge,
          the amount of nodes, and the total amount of connections.*/
-        private Tuple<int, int, int> makeSection(Node start, int startc, uint level)
+        private Tuple<int, int, int> makeSection(Node start, int startc, ref int level)
         {
             Bridge b = new Bridge(level.ToString());
+            Bridge bstart = start as Bridge;
             if (startc == 1) //can only be directly connected to a bridge
             {
+                level++;
                 b.connectToNodeOfSameZone(start);
-                (start as Bridge)?.connectToNodeOfNextZone(b);
-                if (level > difficultyLevel)
+                if (bstart != null)
+                {
+                    bstart.connectToNodeOfNextZone(b);
+                    bstart.disconnect(b);
+                }
+                if (level > difficultyLevel + 1)
                     exitNode = new Node(b);
-                else bridges[level - 1] = b;
+                else bridges[level - 2] = b;
                 return Tuple.Create(rng.Next(1, 4), 1, 1);
             }
             HashSet<int> open = new HashSet<int>();
@@ -76,7 +84,7 @@ namespace STVRogue.GameLogic
                 nodes.Add(n);
                 conns.Add(rng.Next(1, 5));
                 for (int i = 0; i < index; i++)
-                    if (open.Contains(i) && (open.Count > 2 || conns[i] + conns[index] > 2))
+                    if (open.Contains(i) && conns.Sum() > open.Count)
                     {
                         totalConns++;
                         nodes[i].connect(n);
@@ -90,18 +98,35 @@ namespace STVRogue.GameLogic
                         }
                     }
             }
-            if (start is Bridge bstart)
+            if (bstart != null)
                 bstart.toNodes = bstart.neighbors.Except(bstart.fromNodes).ToList();
             index = open.Single();
-            var nb = nodes[index].neighbors;
-            while (nb.Count > 0)
+            foreach (Node nd in shortestpath(start, nodes[index])
+                .Where(m => m == nodes[index] || p.isBridge(start, nodes[index], m)))
             {
-                b.connectToNodeOfSameZone(nb[0]);
-                nb[0].disconnect(nodes[index]);
+                level++;
+                if (level > difficultyLevel + 1)
+                {
+                    exitNode = nd;
+                    exitNode.id = "exit";
+                    break;
+                }
+                else
+                {
+                    var nb = nd.neighbors;
+                    while (nb.Count > 0)
+                    {
+                        Node m = nb[0];
+                        m.disconnect(nd);
+                        if (p.isReachable(start, m))
+                            b.connectToNodeOfSameZone(m);
+                        else
+                            b.connectToNodeOfNextZone(m);
+                    }
+                    bridges[level - 2] = b;
+                    b = new Bridge(level.ToString());
+                }
             }
-            if (level > difficultyLevel)
-                exitNode = new Node(b);
-            else bridges[level - 1] = b;
             return Tuple.Create(conns[index], nodes.Count - 1, totalConns);
         }
 
@@ -174,7 +199,11 @@ namespace STVRogue.GameLogic
         public Node(Bridge b)
         {
             id = b.id;
-            neighbors = b.neighbors;
+            while (b.neighbors.Count > 0)
+            {
+                connect(b.neighbors[0]);
+                b.disconnect(b.neighbors[0]);
+            }
             packs = b.packs;
             items = b.items;
         }

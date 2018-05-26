@@ -82,29 +82,62 @@ namespace STVRogue.Utils
          */
         public Boolean isValidDungeon(Node startNode, Node exitNode, uint level)
         {
-            if (startNode is Bridge || exitNode is Bridge) return false;
-            if (countNumberOfBridges(startNode, exitNode) != level) return false;
+            if (startNode is Bridge || exitNode is Bridge)
+            {
+                Console.WriteLine("start or exit bridge");
+                return false;
+            }
 
             List<Node> nodes = reachableNodes(startNode);
-            if (!nodes.Contains(exitNode)) return false;
+            if (!nodes.Contains(exitNode))
+            {
+                Console.WriteLine("unreachable exit");
+                return false;
+            }
+            uint count;
+            if ((count = countNumberOfBridges(startNode, exitNode)) != level)
+            {
+                Console.WriteLine(count + " bridges instead of " + level);
+                return false;
+            }
             int totalConnectivityDegree = 0;
             foreach (Node nd in nodes)
             {
                 foreach (Node nd2 in nd.neighbors)
                 {
                     // check that each connection is bi-directional
-                    if (!nd2.neighbors.Contains(nd)) return false;
+                    if (!nd2.neighbors.Contains(nd))
+                    {
+                        Console.WriteLine("one way connection");
+                        return false;
+                    }
                 }
                 // check the connectivity degree
-                if (nd.neighbors.Count > 4) return false;
+                if (nd.neighbors.Count > 4)
+                {
+                    Console.WriteLine("over 4 connections");
+                    return false;
+                }
                 totalConnectivityDegree += nd.neighbors.Count;
                 // check bridge
                 Boolean isBridge_ = isBridge(startNode, exitNode, nd);
-                if (nd is Bridge && !isBridge_) return false;
-                if (!(nd is Bridge) && isBridge_) return false;
+                if (nd is Bridge && !isBridge_)
+                {
+                    Console.WriteLine("has bridge class but isn't a bridge");
+                    return false;
+                }
+                if (!(nd is Bridge) && isBridge_)
+                {
+                    Console.WriteLine("is a bridge but doesn't have bridge class");
+                    return false;
+                }
             }
             float avrgConnectivity = (float)totalConnectivityDegree / (float)nodes.Count;
-            if (avrgConnectivity > 3) return false;
+            if (avrgConnectivity > 3)
+            {
+                Console.WriteLine("average connectivity too high");
+                return false;
+            }
             return true;
         }
     }
