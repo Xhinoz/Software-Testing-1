@@ -42,9 +42,8 @@ namespace STVRogue.GameLogic
             if (!location.neighbors.Contains(u)) throw new ArgumentException();
             int capacity = (int) (dungeon.M * (dungeon.level(u) + 1));
             // count monsters already in the node:
-            foreach (Pack Q in location.packs) {
-                capacity = capacity - Q.members.Count;
-            }
+            foreach (Pack Q in u.packs)
+                capacity = capacity - Q.members.Count;           
             // capacity now expresses how much space the node has left
             if (members.Count > capacity)
             {
@@ -54,7 +53,7 @@ namespace STVRogue.GameLogic
             location.packs.Remove(this); // Remove pack from current node
             location = u;
             u.packs.Add(this);
-            Logger.log("Pack " + id + " moves to an already full node " + u.id + ". Rejected. Actually succesful?");
+            Logger.log("Pack " + id + " succesfully moves to " + u.id + " node.");
             return true;
         }
 
