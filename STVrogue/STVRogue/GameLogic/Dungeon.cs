@@ -13,7 +13,7 @@ namespace STVRogue.GameLogic
         public uint difficultyLevel;
         /* a constant multiplier that determines the maximum number of monster-packs per node: */
         public uint M;
-        private Bridge[] bridges;
+        public Bridge[] bridges;
         private Random rng;
         private Predicates p = new Predicates();
 
@@ -169,18 +169,13 @@ namespace STVRogue.GameLogic
         {
             Logger.log("Disconnecting the bridge " + b.id + " from its zone.");
             b.neighbors = b.neighbors.Except(b.fromNodes).ToList();
-            b.fromNodes.Clear();
-            startNode = b;
+            startNode = new Node(b);
         }
 
         /* To calculate the level of the given node. */
         public uint level(Node d) {
             if (d is Bridge)
-            {
-                for (uint i = 0; i < bridges.Length; i++)
-                    if (bridges[i] == d)
-                        return i + 1;
-            }
+                return uint.Parse(d.id);
             return 0;
         }
     }
