@@ -52,7 +52,7 @@ namespace STVRogue.GameLogic
             Assert.AreNotEqual(monster.HP, 6);
             player.Attack(monster); // Exception thrown when killed?
             Assert.AreEqual(pack.members.Count, 4);
-            Assert.AreEqual(player.KillPoint, 1);
+            Assert.AreEqual((int) player.KillPoint, 1);
         }
         [TestMethod]
         public void MSTest_player_crystal_attack()
@@ -92,6 +92,25 @@ namespace STVRogue.GameLogic
             player.bag.Add(crystal);
             player.use(crystal);
             Assert.IsTrue(player.accelerated);
+        }
+        [TestMethod]
+        public void MSTest_use_crystal_disconnectbridge()
+        {
+            Bridge bridge = new Bridge("bridge");
+            Node start = new Node();
+            Node final = new Node();
+            Dungeon dungeon = new Dungeon(1, 1);
+            Player player = new Player();
+            Item crystal = new Crystal("crystal");
+            player.bag.Add(crystal);
+            player.location = bridge;
+            player.dungeon = dungeon;
+
+            bridge.connectToNodeOfSameZone(start);
+            bridge.connectToNodeOfNextZone(final);
+            player.use(crystal);
+            Assert.IsFalse(bridge.neighbors.Contains(start));
+            Assert.IsTrue(bridge.neighbors.Contains(final));
         }
 
         [TestMethod]

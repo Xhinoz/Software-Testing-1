@@ -61,7 +61,7 @@ namespace STVRogue.GameLogic
         public void moveTowards(Node u)
         {
             List<Node> path = Dungeon.shortestpath(location, u);
-            move(path[0]);
+            move(path[1]); // 0 or 1 depending whether own node included
         }
     }
 }

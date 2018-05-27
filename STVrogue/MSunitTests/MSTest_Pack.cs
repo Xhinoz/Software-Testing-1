@@ -75,5 +75,30 @@ namespace STVRogue.GameLogic
             Assert.AreNotEqual(pack.location, node);
             Assert.AreEqual(pack.location, node2);
         }
+        [TestMethod]
+        public void MSTest_pack_moveTowards()
+        {
+            Pack pack = new Pack("Highlander", 1);
+            Dungeon dungeon = new Dungeon(2, 2);
+            Node node = new Node("node1");
+            Node node2 = new Node("node2");
+            Node node3 = new Node("node3");
+            Node node4 = new Node("node4");
+            Node node5 = new Node("node5");
+            Node node6 = new Node("node6");
+
+            node.connect(node2);
+            node2.connect(node3);
+            node3.connect(node4);
+            node.connect(node5);
+            node5.connect(node2);
+            node6.connect(node);
+            pack.location = node;
+            pack.dungeon = dungeon;
+            node.packs.Add(pack);
+
+            pack.moveTowards(node4);
+            Assert.AreEqual(pack.location, node2);
+        }
     }
 }
