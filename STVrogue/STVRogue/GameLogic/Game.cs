@@ -41,7 +41,7 @@ namespace STVRogue.GameLogic
 
                 player.location = dungeon.startNode;
 
-                if (!SeedMonsterPacks(difficultyLevel, numberOfMonsters))
+                if (!SeedMonsterPacks2(difficultyLevel, numberOfMonsters))
                 {
                     validGame = false;
                 }
@@ -62,9 +62,9 @@ namespace STVRogue.GameLogic
 
         public bool SeedMonsterPacks(uint difficultyLevel, uint numberOfMonsters)
         {
-            for (int i = 1; i <= predicates.countNumberOfBridges(dungeon.startNode, dungeon.exitNode); ++i)
+            for (int i = 1; i <= dungeon.level(dungeon.exitNode); ++i)
             {
-                List<Pack> temp = CreateMonsterPacks(difficultyLevel, numberOfMonsters, (uint)i);
+                List<Pack> temp = CreateMonsterPacks(difficultyLevel, numberOfMonsters);
                 foreach (Node n in predicates.reachableNodes(dungeon.startNode))
                 {
                     if(i == dungeon.level(n))
@@ -78,10 +78,7 @@ namespace STVRogue.GameLogic
                             int tempsumMonsters = 0;
                             foreach(Pack p in n.packs)
                             {
-                                foreach(Monster m in p.members)
-                                {
-                                    tempsumMonsters++;
-                                }
+                                tempsumMonsters += p.members.Count();
                             }
 
                             if(tempsumMonsters > difficultyLevel * (dungeon.level(n) + 1))
@@ -96,8 +93,45 @@ namespace STVRogue.GameLogic
 
             return true;
         }
+        //create random packs then loop
+        public bool SeedMonsterPacks2(uint difficultyLevel, uint numberOfMonsters)
+        {
+            List<Pack> temp = CreateMonsterPacks(difficultyLevel, numberOfMonsters);
 
-        public List<Pack> CreateMonsterPacks(uint difficultyLevel, uint numberOfMonsters, uint nodelevel)
+            foreach (Node n in predicates.reachableNodes(dungeon.startNode))
+            {
+                for (int i = 1; i <= predicates.countNumberOfBridges(dungeon.startNode, dungeon.exitNode)+1; ++i)
+                {
+                    if(predicates.countNumberOfBridges(dungeon.startNode, n) + 1 == i)
+                    {
+                        
+                        n.packs.Add(temp.Last()); //add pack to nodes
+                        monsterPacks.Add(temp.Last()); //add to seperate monsterlist
+                        temp.Remove(temp.Last());
+
+                        int tempsumMonsters = 0;
+                        foreach (Pack p in n.packs)
+                        {
+                            tempsumMonsters += p.members.Count();
+                        }
+
+                        if (tempsumMonsters > difficultyLevel * (predicates.countNumberOfBridges(dungeon.startNode, n) + 1))
+                        {
+
+                                return false;
+                        }
+
+                        if (temp.Count == 0)
+                            return true;
+                    }
+
+                }
+            }
+
+            return true;
+        }
+
+        public List<Pack> CreateMonsterPacks(uint difficultyLevel, uint numberOfMonsters)
         {
             uint monsterPackId = 0;
             List<Pack> tempMonsterPacks = new List<Pack>();

@@ -35,15 +35,16 @@ namespace UnitTests_STVRogue
         [TestMethod]
         public void MSTest_correct_numberOfMonsters()
         {
+            RandomGenerator.initializeWithSeed(1);
             Predicates p = new Predicates();
             uint numberOfMonsters = 10;
             Game game = new Game(3, 1, numberOfMonsters);
-            int countMonsters = 0;
+            uint countMonsters = 0;
             foreach(Node n in p.reachableNodes(game.dungeon.startNode))
             {
                 foreach(Pack pack in n.packs)
                 {
-                    countMonsters += pack.members.Count;
+                    countMonsters += (uint)pack.members.Count;
                 }
             }
 
@@ -51,32 +52,19 @@ namespace UnitTests_STVRogue
         }
 
         [TestMethod]
-        public void MSTest_check_node_capacity()
-        {
-            Predicates p = new Predicates();
-            uint difficultyLevel = 3;
-            uint nodeCapacityMultiplier = 1;
-            uint numberOfMonsters = 1;
-
-            Game game = new Game(difficultyLevel, nodeCapacityMultiplier, numberOfMonsters);
-            foreach (Node n in p.reachableNodes(game.dungeon.startNode))
-            {
-                Assert.IsTrue(n.packs.Count < nodeCapacityMultiplier * (p.countNumberOfBridges(game.dungeon.startNode, n) + 1));
-            }
-        }
-
-        [TestMethod]
         public void MSTest_seed_monster_pack_single()
         {
-            uint difficultyLevel = 1;
+            RandomGenerator.initializeWithSeed(1);
+            uint difficultyLevel = 3;
             uint numberOfMonsters = 1;
             Game game = new Game();
             game.dungeon = new Dungeon(difficultyLevel, 1);
-            game.SeedMonsterPacks(difficultyLevel, numberOfMonsters);
+            game.SeedMonsterPacks2(difficultyLevel, numberOfMonsters);
             Assert.AreEqual(1, game.monsterPacks.Count);
 
         }
 
+        //creates 3 packs out of 10 monsters
         [TestMethod]
         public void MSTest_seed_monster_pack_multiple()
         {
@@ -86,8 +74,8 @@ namespace UnitTests_STVRogue
 
             Game game = new Game();
             game.dungeon = new Dungeon(difficultyLevel, 1);
-            game.SeedMonsterPacks(difficultyLevel, numberOfMonsters);
-            Assert.AreEqual(1, game.monsterPacks.Count);
+            game.SeedMonsterPacks2(difficultyLevel, numberOfMonsters);
+            Assert.AreEqual(3, game.monsterPacks.Count);
 
         }
 
@@ -100,7 +88,7 @@ namespace UnitTests_STVRogue
             Game g = new Game();
             RandomGenerator.initializeWithSeed(1);
             //4 5 2 3
-            g.monsterPacks = g.CreateMonsterPacks(1, 14, 1);
+            g.monsterPacks = g.CreateMonsterPacks(1, 14);
             Assert.AreEqual(4, g.monsterPacks.Count);
             Assert.AreEqual(4, g.monsterPacks[0].members.Count);
             Assert.AreEqual(5, g.monsterPacks[1].members.Count);
@@ -113,16 +101,16 @@ namespace UnitTests_STVRogue
         public void MSTest_Create_Single_Monster_Pack()
         {
             Game g = new Game();
-            g.monsterPacks = g.CreateMonsterPacks(1, 1, 1);
+            g.monsterPacks = g.CreateMonsterPacks(1, 1);
             Assert.AreEqual(1, g.monsterPacks.Count);
         }
 
         [TestMethod]
         public void MSTest_Seed_Items_Check()
         {
-            RandomGenerator.initializeWithSeed(1); //items = 7 (3hp, 4 crystals) monsterpacks = 19;
+            RandomGenerator.initializeWithSeed(1); //items = 8
             Game g = new Game(3, 3, 10);
-            Assert.AreEqual(g.items.Count, 7);
+            Assert.AreEqual(g.items.Count, 8);
 
         }
 
@@ -147,6 +135,8 @@ namespace UnitTests_STVRogue
             Pack p = new Pack("test", 1);
             g.player = new Player();
             g.player.HP = 10;
+            g.player.bag.Add(new HealingPotion("2"));
+            g.player.bag[0].HPvalue = 0;
             p.members[0].totalHP = 20;
             p.members[0].HP = 20;
             g.items.Add(new HealingPotion("1"));
