@@ -56,8 +56,8 @@ namespace STVRogue.GameLogic
         }
 
         [Test]
-        /*Removing the a bridge of a lower level means the higher
-         bridge will only be reachable from the end and not from the start.
+        /*Removing a bridge of a lower level means the higher bridge
+         will only be reachable from the end and not from the start.
          It's the other way around for removing a bridge of a higher level.
          This method tests both of these properties to verify the given levels are correct.*/
         public void TestLevel()
