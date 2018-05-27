@@ -15,6 +15,7 @@ namespace STVRogue.GameLogic
         public List<Item> items;
         public List<Pack> monsterPacks;
         private Predicates predicates;
+        public bool validGame;
 
         /* This creates a player and a random dungeon of the given difficulty level and node-capacity
          * The player is positioned at the dungeon's starting-node.
@@ -25,38 +26,50 @@ namespace STVRogue.GameLogic
          */
         public Game(uint difficultyLevel, uint nodeCapcityMultiplier, uint numberOfMonsters)
         {
-            bool validGame = true;
-            while(!validGame)
+            predicates = new Predicates();
+            items = new List<Item>();
+            monsterPacks = new List<Pack>();
+
+
+            do
             {
+                validGame = true;
                 Logger.log("Creating a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
                            + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
                 player = new Player();
                 dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier);
-            
+
                 player.location = dungeon.startNode;
-                
-                if(!SeedMonsterPacks(difficultyLevel, numberOfMonsters))
+
+                if (!SeedMonsterPacks(difficultyLevel, numberOfMonsters))
                 {
                     validGame = false;
                 }
-                if(!SeedItems())
+                if (!SeedItems())
                 {
                     validGame = false;
                 }
 
-            }
+            } while (!validGame);
+        }
+
+        public Game() //empty game for tests
+        {
+            predicates = new Predicates();
+            items = new List<Item>();
+            monsterPacks = new List<Pack>();
         }
 
         public bool SeedMonsterPacks(uint difficultyLevel, uint numberOfMonsters)
         {
-            for (int i = 1; i < predicates.countNumberOfBridges(dungeon.startNode, dungeon.exitNode); ++i)
+            for (int i = 1; i <= predicates.countNumberOfBridges(dungeon.startNode, dungeon.exitNode); ++i)
             {
                 List<Pack> temp = CreateMonsterPacks(difficultyLevel, numberOfMonsters, (uint)i);
                 foreach (Node n in predicates.reachableNodes(dungeon.startNode))
                 {
                     if(i == dungeon.level(n))
                     {
-                        if(temp != null)
+                        if(temp != null && temp.Count != 0)
                         {
                             n.packs.Add(temp.Last()); //add pack to nodes
                             monsterPacks.Add(temp.Last()); //add to seperate monsterlist
@@ -90,16 +103,16 @@ namespace STVRogue.GameLogic
             List<Pack> tempMonsterPacks = new List<Pack>();
 
             //capacity is difficultylevel * (level of the node  + 1)
-            uint monstersLeftToPack = ((2 * nodelevel * numberOfMonsters) / ((difficultyLevel + 2) * (difficultyLevel + 1)));
-            
+            //uint monstersLeftToPack = ((2 * nodelevel * numberOfMonsters) / ((difficultyLevel + 2) * (difficultyLevel + 1)));
+            uint monstersLeftToPack = numberOfMonsters;
+
             while (monstersLeftToPack > 0)
             {
-                uint tempAmountMonsters = 1 + (uint)RandomGenerator.rnd.Next((int)monstersLeftToPack - 1);
+                uint tempAmountMonsters = 1 + (uint)RandomGenerator.rnd.Next((int)monstersLeftToPack);
                 tempMonsterPacks.Add(new Pack(monsterPackId.ToString(), tempAmountMonsters));
-                //place monsterPack
                 monstersLeftToPack -= tempAmountMonsters;
                 monsterPackId++;
-                Debug.Assert(monstersLeftToPack < 0, "cant pack negative amount of monsters");
+                Debug.Assert(monstersLeftToPack >= 0, "cant pack negative amount of monsters" + tempAmountMonsters + " " + monstersLeftToPack);
             }
 
             return tempMonsterPacks;
@@ -111,14 +124,16 @@ namespace STVRogue.GameLogic
             int tempPotionId = 0;
             foreach(Node n in predicates.reachableNodes(dungeon.startNode))
             {
-                if(RandomGenerator.rnd.Next(24) == 0) // 1 out of 25 chance to place crystal on every node
+                if(RandomGenerator.rnd.Next(24) == 0) // 1 out of 23 chance to place crystal on every node
                 {
                     n.items.Add(new Crystal(tempCrystalId.ToString()));
+                    items.Add(new Crystal(tempCrystalId.ToString()));
                     tempCrystalId++;
                 }
                 if(RandomGenerator.rnd.Next(19) == 0) // 1 out of 20 chance to place potion every node
                 {
                     n.items.Add(new HealingPotion(tempPotionId.ToString()));
+                    items.Add(new HealingPotion(tempPotionId.ToString()));
                     tempPotionId++;
                 }
             }
@@ -141,11 +156,11 @@ namespace STVRogue.GameLogic
             }
 
             uint HPpotions = (uint)player.HP;
-            foreach (HealingPotion p in items)
+            foreach (Item p in items)
             {
                 HPpotions += p.HPvalue;
             }
-            foreach(HealingPotion p in player.bag)
+            foreach(Item p in player.bag)
             {
                 HPpotions += p.HPvalue;
             }
@@ -161,8 +176,7 @@ namespace STVRogue.GameLogic
         public Boolean update(Command userCommand)
         {
             Logger.log("Player does " + userCommand);
-            Debug.Assert(userCommand == null, "no user command given");
-            
+        
             return true;
         }
     }

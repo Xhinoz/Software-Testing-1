@@ -11,6 +11,7 @@ namespace STVRogue.GameLogic
     {
         public String id;
         public Boolean used = false;
+        public uint HPvalue; //hacky way to easily traverse both crystals and potions
         public Item() { }
         public Item(String id) { this.id = id; }
 
@@ -30,7 +31,7 @@ namespace STVRogue.GameLogic
 
     public class HealingPotion : Item
     {
-        public uint HPvalue;
+
 
         /* Create a healing potion with random HP-value */
         public HealingPotion(String id)
@@ -48,7 +49,7 @@ namespace STVRogue.GameLogic
 
     public class Crystal : Item
     {
-        public Crystal(String id) : base(id) { }
+        public Crystal(String id) : base(id) { HPvalue = 0; }
         override public void use(Player player)
         {
             base.use(player);
