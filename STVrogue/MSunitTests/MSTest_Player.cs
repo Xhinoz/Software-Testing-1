@@ -97,8 +97,8 @@ namespace STVRogue.GameLogic
         public void MSTest_use_crystal_disconnectbridge()
         {
             Bridge bridge = new Bridge("bridge");
-            Node start = new Node();
-            Node final = new Node();
+            Node start = new Node("start");
+            Node final = new Node("final");
             Dungeon dungeon = new Dungeon(1, 1);
             Player player = new Player();
             Item crystal = new Crystal("crystal");
@@ -109,8 +109,8 @@ namespace STVRogue.GameLogic
             bridge.connectToNodeOfSameZone(start);
             bridge.connectToNodeOfNextZone(final);
             player.use(crystal);
-            Assert.IsFalse(bridge.neighbors.Contains(start));
-            Assert.IsTrue(bridge.neighbors.Contains(final));
+            Assert.IsFalse(dungeon.startNode.neighbors.Contains(start));
+            Assert.IsTrue(dungeon.startNode.neighbors.Contains(final));
         }
 
         [TestMethod]
