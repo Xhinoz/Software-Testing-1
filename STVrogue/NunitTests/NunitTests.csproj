@@ -56,7 +56,6 @@
   <ItemGroup>
     <Compile Include="Example_fscheckTest.cs" />
     <Compile Include="NTest_Dungeon.cs" />
-    <Compile Include="NTest_Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

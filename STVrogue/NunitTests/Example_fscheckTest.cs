@@ -36,7 +36,7 @@ namespace SomeNameClass
     [TestFixture(Description = "containing few examples of automated tests using fscheck")]
     class Example_fscheckTest
     {
-        // QuickCheck writes its report to the Console. To see what it reporteed,
+        /*// QuickCheck writes its report to the Console. To see what it reporteed,
         // click at the "Output" link in your unit test tab.
         [Test(Description = "test the constructor")]
         public void NTest_Thermometer_constructor()
@@ -101,7 +101,7 @@ namespace SomeNameClass
                 }
              )
              .QuickCheckThrowOnFailure();
-        }
+        }*/
 
         /* A class containing your value generators, in this case just one. */
         class MyCustomGenerators

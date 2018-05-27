@@ -1,0 +1,48 @@
+Only considering GameLogic folder in my answers because that's where the implementation is.
+It's also the folder all of our tests targeted.
+
+N = 12
+locs = 401
+locsavg = 33.42
+Mtotal = 44
+Mavg = 3.67
+Mmax = 8
+cabe = 137
+cabeavg = 11.42
+
+N' = 12
+T = 46
+Tlocs = 388
+Tlocsavg = 32.33
+E = unsure, didn't keep track of it
+Eavg = N/A
+bugs = 22
+
+The covered classes are all classes in GameLogic. The coverage is 100% for each of them.
+
+Optionals: Automated Testing of Dungeon by using FsCheck. I didn't do the second part of checking if the constructor is
+sufficiently random, but all of the methods do have their own FsChecks. I found every bug in the Dungeon class (12 of them)
+this way because I started out by using this approach. It felt unnecessary to first try regular unit tests when I was
+planning to use FsCheck anyway.
+Approach:
+constructor is tested by creating a random sized Dungeon and checking if it's valid.
+shortestpath is tested by selecting two somewhat random nodes from a random sized Dungeon and checking if it's a path.
+disconnect is tested by checking if a random sized Dungeon is still a valid dungeon of the right level after disconnecting
+a random bridge.
+level is tested by removing a random bridge from a random sized Dungeon. Then another random bridge is selected. If
+this bridge's level is higher, it should only be reachable from the end and no longer from the start. If it's lower,
+it should only be reachable from the start and not from the end. If this property holds, that means the right level
+is given for both bridges.
+
+Member 1: Fabian Machielsen
+Contribution: Implementing and testing the Dungeon class (which also includes Bridge and part of Node automatically).
+              Writing this report.
+Effort percentage: 33.33%
+
+Member 2: Shaqquile Pengel
+Contribution: Implementing and testing combat, and testing Item, Monster, Pack, Player, and Creature classes.
+Effort percentage: 33.33%
+
+Member 3: Pepijn Thijssens
+Contribution: Implementing and testing game creation, item seeding, and monster seeding.
+Effort percentage: 33.33%

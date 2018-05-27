@@ -1,10 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using STVRogue.GameLogic;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using STVRogue.Utils;
 
 
-namespace UnitTests_STVRogue
+namespace STVRogue.GameLogic
 {
     [TestClass]
     public class MSTest_Game
