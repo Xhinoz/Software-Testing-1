@@ -24,6 +24,8 @@ namespace STVRogue.GameLogic
          * the nodes' capacity are not violated. Furthermore the seeding of the monsters
          * and items should meet the balance requirements stated in the Project Document.
          */
+         
+         //create a game until a valid one is made
         public Game(uint difficultyLevel, uint nodeCapcityMultiplier, uint numberOfMonsters)
         {
             predicates = new Predicates();
@@ -60,39 +62,6 @@ namespace STVRogue.GameLogic
             monsterPacks = new List<Pack>();
         }
 
-        public bool SeedMonsterPacks(uint difficultyLevel, uint numberOfMonsters)
-        {
-            for (int i = 1; i <= dungeon.level(dungeon.exitNode); ++i)
-            {
-                List<Pack> temp = CreateMonsterPacks(difficultyLevel, numberOfMonsters);
-                foreach (Node n in predicates.reachableNodes(dungeon.startNode))
-                {
-                    if(i == dungeon.level(n))
-                    {
-                        if(temp != null && temp.Count != 0)
-                        {
-                            n.packs.Add(temp.Last()); //add pack to nodes
-                            monsterPacks.Add(temp.Last()); //add to seperate monsterlist
-                            temp.Remove(temp.Last());
-
-                            int tempsumMonsters = 0;
-                            foreach(Pack p in n.packs)
-                            {
-                                tempsumMonsters += p.members.Count();
-                            }
-
-                            if(tempsumMonsters > difficultyLevel * (dungeon.level(n) + 1))
-                            {
-                                return false;
-                            }
-                        }                 
-                    }
-                }
-            }
-
-
-            return true;
-        }
         //create random packs then loop
         public bool SeedMonsterPacks2(uint difficultyLevel, uint numberOfMonsters)
         {
@@ -122,23 +91,25 @@ namespace STVRogue.GameLogic
                         }
 
                         if (temp.Count == 0)
-                            return true;
+                            break;
                     }
 
                 }
-            }
+
+                if (temp.Count == 0)
+                    break;
+            } 
 
             return true;
         }
 
+        //create a list of random sized packs
         public List<Pack> CreateMonsterPacks(uint difficultyLevel, uint numberOfMonsters)
         {
             uint monsterPackId = 0;
             List<Pack> tempMonsterPacks = new List<Pack>();
 
-            //capacity is difficultylevel * (level of the node  + 1)
-            //uint monstersLeftToPack = ((2 * nodelevel * numberOfMonsters) / ((difficultyLevel + 2) * (difficultyLevel + 1)));
-            uint monstersLeftToPack = numberOfMonsters;
+             uint monstersLeftToPack = numberOfMonsters;
 
             while (monstersLeftToPack > 0)
             {
@@ -152,6 +123,7 @@ namespace STVRogue.GameLogic
             return tempMonsterPacks;
         }
 
+        //seed items random percentage change to drop per node (chosen randomly)
         public bool SeedItems()
         {
             int tempCrystalId = 0;

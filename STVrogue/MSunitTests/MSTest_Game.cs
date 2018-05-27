@@ -153,5 +153,16 @@ namespace UnitTests_STVRogue
             Assert.IsTrue(g.update(command));
         }
 
+        [TestMethod]
+        public void MSTest_game_creation_exception()
+        {
+            GameCreationException GCE1 = new GameCreationException();
+            GameCreationException GCE2 = new GameCreationException("certain exception");
+
+            Assert.IsNotNull(GCE1);
+            Assert.IsNotNull(GCE2);
+        }
+
+
     }
 }
