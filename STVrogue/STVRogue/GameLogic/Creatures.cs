@@ -76,10 +76,7 @@ namespace STVRogue.GameLogic
             }
             else
             {
-                //int packCount = foe_.pack.members.Count;
-                //foe_.pack.members.RemoveAll(target => target.HP <= 0);
                 int packCount2 = foe_.pack.members.Count;
-                //KillPoint += (uint) (packCount - packCount2);
                 for (int i = packCount2 - 1; i >= 0; i--)
                 {
                     Monster target = foe_.pack.members[i];
