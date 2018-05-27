@@ -131,6 +131,8 @@ namespace STVRogue.GameLogic
         }
 
         /* Return a shortest path between node u and node v */
+        /*Changed to static to make it easier to insert your own graphs without
+         having to generate a dungeon, hope that isn't a problem.*/
         public static List<Node> shortestpath(Node u, Node v)
         {
             var queue = new Queue<Node>();
