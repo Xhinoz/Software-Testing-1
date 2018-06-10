@@ -182,7 +182,9 @@ namespace STVRogue.GameLogic
         public Boolean update(Command userCommand)
         {
             Logger.log("Player does " + userCommand);
-        
+            //Console.WriteLine()
+
+
             return true;
         }
     }
