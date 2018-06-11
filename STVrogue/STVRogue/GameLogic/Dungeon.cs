@@ -26,8 +26,7 @@ namespace STVRogue.GameLogic
             difficultyLevel = level;
             M = nodeCapacityMultiplier;
             bridges = new Bridge[level];
-            //TODO: Remove seed when testing is done.
-            rng = new Random(42);
+            rng = RandomGenerator.rnd;
             startNode = new Node("start");
             int nodes, conns;
             do

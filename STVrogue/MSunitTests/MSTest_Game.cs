@@ -106,9 +106,9 @@ namespace STVRogue.GameLogic
         [TestMethod]
         public void MSTest_Seed_Items_Check()
         {
-            RandomGenerator.initializeWithSeed(1); //items = 8
+            RandomGenerator.initializeWithSeed(1); //items = 7
             Game g = new Game(3, 3, 10);
-            Assert.AreEqual(g.items.Count, 8);
+            Assert.AreEqual(g.items.Count, 7);
 
         }
 
