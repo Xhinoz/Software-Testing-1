@@ -8,6 +8,15 @@ namespace STVRogue.GameLogic
 
         public void Move(Player player, Node n)
         {
+            if (player.location.GetType().Name == "Bridge") // Up player level when entering new zone
+            {
+                Bridge bridge = player.location as Bridge;
+                if (bridge.toNodes.Contains(n))
+                {
+                    player.level++;
+                    // dungeon.alert = 0;
+                }
+            }
             player.location = n;
             Console.WriteLine("{0} moved to {1}.", player.name, n.id);
             n.fight(player);

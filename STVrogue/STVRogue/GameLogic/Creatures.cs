@@ -44,6 +44,7 @@ namespace STVRogue.GameLogic
         public Boolean accelerated = false;
         public uint KillPoint = 0;
         public List<Item> bag = new List<Item>();
+        public int level = 1;
         // For Testing
         private List<int> commands = new List<int>();
         private int commanditerator = 0;

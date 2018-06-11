@@ -76,6 +76,8 @@ namespace STVRogue.GameLogic
                         
                         n.packs.Add(temp.Last()); //add pack to nodes
                         monsterPacks.Add(temp.Last()); //add to seperate monsterlist
+                        Pack pack = temp.Last();
+                        pack.level = i; // give zone level to pack
                         temp.Remove(temp.Last());
 
                         int tempsumMonsters = 0;
@@ -184,8 +186,57 @@ namespace STVRogue.GameLogic
             Logger.log("Player does " + userCommand);
             //Console.WriteLine()
 
+            foreach (Pack pack in monsterPacks)
+            {
+                RandomGenerator.rnd.Next(pack.location.neighbors.Count);
+
+                // if endzone > if pack.level == bridges + 1 >> movetowards player.location
+            }
+            return true;
+        }
+        public bool RZone(Pack pack, Node destination)
+        {
+            if (destination.GetType().Name == "Bridge") // Lower bridge
+                if (dungeon.level(destination) != pack.level)
+                    return false;
+
+            if (pack.location.GetType().Name == "Bridge")      
+                if (pack.level == dungeon.level(pack.location)) // Redundant?
+                {
+                    Bridge bridge = pack.location as Bridge;
+                    if (bridge.toNodes.Contains(destination))
+                        return false;
+                }
 
             return true;
+        }
+        public bool RNode(Pack pack, Node destination)
+        {
+            bool moved = false;
+            while (!moved)
+            {
+
+            }
+            if (!pack.move(destination))
+                // try again
+        }
+        public void RAlert()
+        {
+            if (dungeon.alert != 0) // Alarm raised
+
+        }
+        public bool REndZone()
+        {
+            int bridges = (int) predicates.countNumberOfBridges(dungeon.startNode, dungeon.exitNode);
+            if (player.level == bridges + 1) // Zone level starts at 1
+                return true;
+            
+            return false;
+        }
+
+        public void GUI()
+        {
+            Console.WriteLine("What would you like to do next? \n 1: Move to a node. \n 2: Use a healing potion. \n 3: Do nothing.");
         }
     }
 
