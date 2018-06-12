@@ -185,15 +185,45 @@ namespace STVRogue.GameLogic
         {
             Logger.log("Player does " + userCommand);
             //Console.WriteLine()
+            //// Player Action /////
 
+
+
+            //// Monster Actions /////
             foreach (Pack pack in monsterPacks)
             {
-                RandomGenerator.rnd.Next(pack.location.neighbors.Count);
+                // move or do nothing
+                bool moving = RandomGenerator.rnd.NextDouble() > 0.5;
+                if (moving)
+                {
+                    if (REndZone(pack)) // EndZone rule activated
+                        pack.moveTowards(player.location);
+                    else if (RAlert(pack)) // if pack is in alarmed zone
+                        pack.moveTowards(player.location);           
+                    else
+                    {
+                        bool moved = false;
+                        int tried = 0;
+                        List<Node> temp_neighbours = new List<Node>(pack.location.neighbors);
+                        while (!moved && tried != pack.location.neighbors.Count) // tries till success
+                        {
+                            int destination = RandomGenerator.rnd.Next(temp_neighbours.Count);
+                            Node node_destination = temp_neighbours[destination];
+                            if (RZone(pack, node_destination)) // Stays in zone
+                            {
+                                moved = pack.move(node_destination);
+                            }
+                            temp_neighbours.RemoveAt(destination);
+                            tried++;
+                            // if endzone > if pack.level == bridges + 1 >> movetowards player.location
+                        }
+                    }
+                }
 
-                // if endzone > if pack.level == bridges + 1 >> movetowards player.location
             }
             return true;
         }
+        // Valid destination in zone
         public bool RZone(Pack pack, Node destination)
         {
             if (destination.GetType().Name == "Bridge") // Lower bridge
@@ -210,26 +240,32 @@ namespace STVRogue.GameLogic
 
             return true;
         }
-        public bool RNode(Pack pack, Node destination)
-        {
-            bool moved = false;
-            while (!moved)
-            {
+        //public bool RNode(Pack pack, Node destination)
+        //{
+        //    bool moved = false;
+        //    while (!moved)
+        //    {
 
-            }
-            if (!pack.move(destination))
-                // try again
-        }
-        public void RAlert()
+        //    }
+        //    if (!pack.move(destination))
+        //        // try again
+        //}
+        // Which packs act on Alert
+        public bool RAlert(Pack pack)
         {
-            if (dungeon.alert != 0) // Alarm raised
+            if (Dungeon.alert != 0) // Alarm raised
+                if (pack.level == Dungeon.alert)
+                    return true;
 
+            return false;
         }
-        public bool REndZone()
+        // When Endzone reached
+        public bool REndZone(Pack pack)
         {
             int bridges = (int) predicates.countNumberOfBridges(dungeon.startNode, dungeon.exitNode);
             if (player.level == bridges + 1) // Zone level starts at 1
-                return true;
+                if (pack.level == player.level)
+                    return true;
             
             return false;
         }
@@ -237,6 +273,7 @@ namespace STVRogue.GameLogic
         public void GUI()
         {
             Console.WriteLine("What would you like to do next? \n 1: Move to a node. \n 2: Use a healing potion. \n 3: Do nothing.");
+            
         }
     }
 

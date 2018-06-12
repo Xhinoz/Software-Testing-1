@@ -16,7 +16,7 @@ namespace STVRogue.GameLogic
         public Bridge[] bridges;
         private Random rng;
         private Predicates p = new Predicates();
-        public int alert = 0;
+        public static int alert = 0; // Alarm level
 
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
         public Dungeon(uint level, uint nodeCapacityMultiplier)
@@ -227,7 +227,7 @@ namespace STVRogue.GameLogic
         {
             while (player.location == this && packs.Count != 0) // Contested
             {
-                // dungeon.alert = player.level;
+                Dungeon.alert = player.level;
 
                 // Choice?
                 //int choice = RandomGenerator.rnd.Next(3);
