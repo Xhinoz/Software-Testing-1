@@ -7,6 +7,7 @@ using STVRogue.Utils;
 
 namespace STVRogue.GameLogic
 {
+    [Serializable]
     public class Pack
     {
         String id;
