@@ -1,6 +1,7 @@
 ﻿using System;
 namespace STVRogue.GameLogic
 {
+    [Serializable]
     public class Command
     {
         public Command() { }
@@ -14,7 +15,7 @@ namespace STVRogue.GameLogic
                 if (bridge.toNodes.Contains(n))
                 {
                     player.level++;
-                    // dungeon.alert = 0;
+                    Dungeon.alert = 0; // Reset alarm
                 }
             }
             player.location = n;

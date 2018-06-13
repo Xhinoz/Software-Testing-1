@@ -44,8 +44,10 @@
     <Compile Include="GameLogic\Creatures.cs" />
     <Compile Include="GameLogic\Dungeon.cs" />
     <Compile Include="GameLogic\Game.cs" />
+    <Compile Include="TestingInfrastructure\GamePlay.cs" />
     <Compile Include="GameLogic\Items.cs" />
     <Compile Include="GameLogic\Pack.cs" />
+    <Compile Include="TestingInfrastructure\Specification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Predicates.cs" />
     <Compile Include="Utils\Specification.cs" />

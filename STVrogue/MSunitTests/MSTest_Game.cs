@@ -147,7 +147,7 @@ namespace STVRogue.GameLogic
         public void MSTest_command_valid()
         {
             Game g = new Game();
-            STVRogue.Command command = new STVRogue.Command();
+            STVRogue.GameLogic.Command command = new STVRogue.GameLogic.Command();
             Assert.IsTrue(g.update(command));
         }
 

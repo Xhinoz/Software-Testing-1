@@ -6,6 +6,7 @@ using STVRogue.Utils;
 
 namespace STVRogue.GameLogic
 {
+    [Serializable]
     public class Dungeon
     {
         public Node startNode;
@@ -16,7 +17,7 @@ namespace STVRogue.GameLogic
         public Bridge[] bridges;
         private Random rng;
         private Predicates p = new Predicates();
-        public int alert = 0;
+        public static int alert = 0; // Alarm level
 
         /* To create a new dungeon with the specified difficult level and capacity multiplier */
         public Dungeon(uint level, uint nodeCapacityMultiplier)
@@ -181,7 +182,7 @@ namespace STVRogue.GameLogic
             return 0;
         }
     }
-
+    [Serializable]
     public class Node
     {
         public String id;
@@ -226,7 +227,7 @@ namespace STVRogue.GameLogic
         {
             while (player.location == this && packs.Count != 0) // Contested
             {
-                // dungeon.alert = player.level;
+                Dungeon.alert = player.level;
 
                 // Choice?
                 //int choice = RandomGenerator.rnd.Next(3);
@@ -342,7 +343,7 @@ namespace STVRogue.GameLogic
             }
         }
     }
-
+    [Serializable]
     public class Bridge : Node
     {
         public List<Node> fromNodes = new List<Node>();
