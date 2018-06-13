@@ -1,6 +1,7 @@
 ﻿using System;
 namespace STVRogue.GameLogic
 {
+    [Serializable]
     public class Command
     {
         public Command() { }

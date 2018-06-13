@@ -13,7 +13,7 @@ namespace STVRogue.GameLogic
 
     public class NonNegativeHP_Spec : Specification
     {
-        public bool test(Game g) { return g.player.HP >= 0; }
+        new public bool test(Game g) { return g.player.HP >= 0; }
     }
 
     

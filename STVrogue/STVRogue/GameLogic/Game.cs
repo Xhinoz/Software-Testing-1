@@ -5,9 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using STVRogue.Utils;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace STVRogue.GameLogic
 {
+    [Serializable]
     public class Game
     {
         public Player player;
@@ -24,8 +28,23 @@ namespace STVRogue.GameLogic
          * the nodes' capacity are not violated. Furthermore the seeding of the monsters
          * and items should meet the balance requirements stated in the Project Document.
          */
-         
-         //create a game until a valid one is made
+
+        public void SerializeGame()
+        {
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(@"D:\prog\Software-Testing-1\STVrogue\GamePlays\ExampleNew.txt", FileMode.Create, FileAccess.Write);
+
+            formatter.Serialize(stream, this);
+            stream.Close();
+
+            //stream = new FileStream(@"E:\ExampleNew.txt", FileMode.Open, FileAccess.Read);
+            //Game objnew = (Game)formatter.Deserialize(stream);
+
+            //Console.WriteLine(objnew.ID);
+            //Console.WriteLine(objnew.Name);
+        }
+
+        //create a game until a valid one is made
         public Game(uint difficultyLevel, uint nodeCapcityMultiplier, uint numberOfMonsters)
         {
             predicates = new Predicates();

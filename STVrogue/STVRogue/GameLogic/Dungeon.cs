@@ -6,6 +6,7 @@ using STVRogue.Utils;
 
 namespace STVRogue.GameLogic
 {
+    [Serializable]
     public class Dungeon
     {
         public Node startNode;
@@ -181,7 +182,7 @@ namespace STVRogue.GameLogic
             return 0;
         }
     }
-
+    [Serializable]
     public class Node
     {
         public String id;
@@ -342,7 +343,7 @@ namespace STVRogue.GameLogic
             }
         }
     }
-
+    [Serializable]
     public class Bridge : Node
     {
         public List<Node> fromNodes = new List<Node>();

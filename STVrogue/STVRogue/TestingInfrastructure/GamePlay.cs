@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace STVRogue.GameLogic
 {
@@ -16,6 +18,8 @@ namespace STVRogue.GameLogic
             gamedata = System.IO.File.ReadAllLines(filename);
             turn = 0;
         }
+
+
 
         public bool Replay(Specification S)
         {
