@@ -35,4 +35,51 @@ namespace STVRogue.Utils
             return verdict;
         }
     }
+
+    public class Future : Specification
+    {
+        private Predicate<Game> p, q;
+        private bool pre, post = false;
+
+        public Future(Predicate<Game> p, Predicate<Game> q)
+        {
+            this.p = p;
+            this.q = q;
+        }
+
+        /*Only returns false if it's the last turn and p has occurred but q hasn't.
+         Always returns true otherwise.*/
+        public bool test(Game g)
+        {
+            pre = pre || p(g);
+            post = post || q(g);
+            return !g.lastTurn || !pre || post;
+        }
+    }
+
+    public class Implies : Specification
+    {
+        private Specification s, t;
+        private bool pre, post = true;
+
+        public Implies(Specification s, Specification t)
+        {
+            this.s = s;
+            this.t = t;
+        }
+
+        /*Once again, can't be sure it's false until the last turn.
+         Always returns true before then.*/
+        public bool test(Game g)
+        {
+            pre = pre && s.test(g);
+            post = post && s.test(g);
+            return !g.lastTurn || !pre || post;
+        }
+
+        public bool relevant()
+        {
+            return pre;
+        }
+    }
 }

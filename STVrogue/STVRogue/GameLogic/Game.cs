@@ -11,7 +11,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace STVRogue.GameLogic
 {
-    [Serializable]
     public class Game
     {
         public Player player;
@@ -20,6 +19,7 @@ namespace STVRogue.GameLogic
         public List<Pack> monsterPacks;
         private Predicates predicates;
         public bool validGame;
+        public bool lastTurn;
 
         /* This creates a player and a random dungeon of the given difficulty level and node-capacity
          * The player is positioned at the dungeon's starting-node.
@@ -28,21 +28,6 @@ namespace STVRogue.GameLogic
          * the nodes' capacity are not violated. Furthermore the seeding of the monsters
          * and items should meet the balance requirements stated in the Project Document.
          */
-
-        public void SerializeGame()
-        {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(@"D:\prog\Software-Testing-1\STVrogue\GamePlays\ExampleNew.txt", FileMode.Create, FileAccess.Write);
-
-            formatter.Serialize(stream, this);
-            stream.Close();
-
-            //stream = new FileStream(@"E:\ExampleNew.txt", FileMode.Open, FileAccess.Read);
-            //Game objnew = (Game)formatter.Deserialize(stream);
-
-            //Console.WriteLine(objnew.ID);
-            //Console.WriteLine(objnew.Name);
-        }
 
         //create a game until a valid one is made
         public Game(uint difficultyLevel, uint nodeCapcityMultiplier, uint numberOfMonsters)
@@ -80,6 +65,21 @@ namespace STVRogue.GameLogic
             items = new List<Item>();
             monsterPacks = new List<Pack>();
         }
+        
+        /*public void SerializeGame()
+        {
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(@"D:\prog\Software-Testing-1\STVrogue\GamePlays\ExampleNew.txt", FileMode.Create, FileAccess.Write);
+
+            formatter.Serialize(stream, this);
+            stream.Close();
+
+            //stream = new FileStream(@"E:\ExampleNew.txt", FileMode.Open, FileAccess.Read);
+            //Game objnew = (Game)formatter.Deserialize(stream);
+
+            //Console.WriteLine(objnew.ID);
+            //Console.WriteLine(objnew.Name);
+        }*/
 
         //create random packs then loop
         public bool SeedMonsterPacks2(uint difficultyLevel, uint numberOfMonsters)

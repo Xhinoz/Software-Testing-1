@@ -6,7 +6,6 @@ using STVRogue.Utils;
 
 namespace STVRogue.GameLogic
 {
-    [Serializable]
     public class Dungeon
     {
         public Node startNode;
@@ -15,6 +14,8 @@ namespace STVRogue.GameLogic
         /* a constant multiplier that determines the maximum number of monster-packs per node: */
         public uint M;
         public Bridge[] bridges;
+        public static uint counter;
+        public static Dictionary<string, Node> nodes;
         private Random rng;
         private Predicates p = new Predicates();
         public static int alert = 0; // Alarm level
@@ -24,6 +25,7 @@ namespace STVRogue.GameLogic
         {
             if (level == 0)
                 throw new ArgumentException("Dungeon level must be at least 1.");
+            
             Logger.log("Creating a dungeon of difficulty level " + level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
             difficultyLevel = level;
             M = nodeCapacityMultiplier;
@@ -33,6 +35,7 @@ namespace STVRogue.GameLogic
             int nodes, conns;
             do
             {
+                counter = level + 2;
                 Node start = startNode;
                 int startc = rng.Next(1, 5);
                 nodes = 1;
@@ -182,7 +185,7 @@ namespace STVRogue.GameLogic
             return 0;
         }
     }
-    [Serializable]
+
     public class Node
     {
         public String id;
@@ -190,8 +193,12 @@ namespace STVRogue.GameLogic
         public List<Pack> packs = new List<Pack>();
         public List<Item> items = new List<Item>();
 
-        public Node() { }
-        public Node(String id) { this.id = id; }
+        public Node() : this(Dungeon.counter++.ToString()) { }
+        public Node(String id)
+        {
+            this.id = id;
+            Dungeon.nodes[id] = this;
+        }
         
         /*Because the exit node being a bridge is unacceptable.*/
         public Node(Bridge b)
@@ -306,8 +313,7 @@ namespace STVRogue.GameLogic
                                 totalHP += monst.totalHP;
                             }
                             double flee_chance = (1 - HP / totalHP) / 2;
-                            // bool flee = RandomGenerator.rnd.NextDouble() < flee_chance; // Real implementation
-                            bool flee = player.GetNextCommand() == 1; // FOR TESTING ONLY
+                            bool flee = RandomGenerator.rnd.NextDouble() < flee_chance;
 
                             if (flee) // Fleeing
                             {
@@ -343,7 +349,7 @@ namespace STVRogue.GameLogic
             }
         }
     }
-    [Serializable]
+
     public class Bridge : Node
     {
         public List<Node> fromNodes = new List<Node>();

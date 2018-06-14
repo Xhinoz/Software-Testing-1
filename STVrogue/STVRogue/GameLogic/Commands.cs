@@ -1,14 +1,19 @@
 ﻿using System;
+using System.IO;
+
 namespace STVRogue.GameLogic
 {
-    [Serializable]
     public class Command
     {
+        StreamWriter writer;
+
         public Command() { }
+        public Command(StreamWriter writer) { this.writer = writer; }
         override public string ToString() { return "no-action"; }
 
         public void Move(Player player, Node n)
         {
+            writer.WriteLine("move " + n.id);
             if (player.location.GetType().Name == "Bridge") // Up player level when entering new zone
             {
                 Bridge bridge = player.location as Bridge;
@@ -24,11 +29,13 @@ namespace STVRogue.GameLogic
         }
         public void UseItem(Player player, Item item)
         {
+
             player.use(item);
             Console.WriteLine("{0} has used a Healing Potion.", player.name);
         }
         public void DoNothing(Player player)
         {
+            writer.WriteLine("nothing");
             Console.WriteLine("{0} has decided to rest and not move.", player.name);
         }
     }
