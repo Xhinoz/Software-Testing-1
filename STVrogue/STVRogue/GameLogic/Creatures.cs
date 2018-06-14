@@ -107,47 +107,49 @@ namespace STVRogue.GameLogic
             Console.WriteLine("You have {0} Healingpotions in your bag.", healingpotions);
             Console.WriteLine("You have {0} Crystals in your bag.", crystals);
         }
-        public void useHealingPotion()
+        // 1 for potion, 2 for crystal
+        public void useBagItem(int item)
         {
             bool haspotion = false;
-            int potion = 0;
+            int potion_index = 0;
+            bool hascrystal = false;
+            int crystal_index = 0;
             for (int t = 0; t < bag.Count; t++)
             {
                 if (bag[t].GetType().Name == "HealingPotion")
                 {
                     haspotion = true;
-                    potion = t;
+                    potion_index = t;
                 }
-            }
-            if (haspotion)
-            {
-                Item healingpotion = bag[potion];
-                use(healingpotion);
-            }
-            else
-                Console.WriteLine("You have no Healingpotions.");
-        }
-        public void useCrystal()
-        {
-            bool hascrystal = false;
-            int crystal = 0;
-            for (int t = 0; t < bag.Count; t++)
-            {
                 if (bag[t].GetType().Name == "Crystal")
                 {
                     hascrystal = true;
-                    crystal = t;
+                    crystal_index = t;
                 }
             }
-            if (hascrystal)
+            if (item == 1)
             {
-                Item healingpotion = bag[crystal];
-                use(healingpotion);
+                if (haspotion)
+                {
+                    Item healingpotion = bag[potion_index];
+                    use(healingpotion);
+                    Console.WriteLine("You have healed yourself by drinking a potion.");
+                }
+                else
+                    Console.WriteLine("You have no Healingpotions in your inventory.");
             }
-            else
-                Console.WriteLine("You have no crystalls in your inventory.");
+            if (item == 2)
+            {
+                if (hascrystal)
+                {
+                    Item crystal = bag[crystal_index];
+                    use(crystal);
+                    Console.WriteLine("You have been energized by a crystal.");
+                }
+                else
+                    Console.WriteLine("You have no Crystals in your inventory.");
+            }
         }
-
         // For testing 
         public void AddNextCommand(int choice)
         {
