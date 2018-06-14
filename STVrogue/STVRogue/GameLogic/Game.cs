@@ -307,6 +307,7 @@ namespace STVRogue.GameLogic
 
                 case '2':
                     // display inventory
+                    player.DisplayInventory();
                     // readinput > command.useitem(inputitem)            
                     break;
                 case '3':

@@ -7,7 +7,6 @@ using STVRogue.Utils;
 
 namespace STVRogue.GameLogic
 {
-    [Serializable]
     public class Creature
     {
         public String id;
@@ -24,7 +23,6 @@ namespace STVRogue.GameLogic
         }
     }
 
-    [Serializable]
     public class Monster : Creature
     {
         public Pack pack;
@@ -38,7 +36,7 @@ namespace STVRogue.GameLogic
             totalHP = HP;
         }
     }
-    [Serializable]
+
     public class Player : Creature
     {
         public Dungeon dungeon;
@@ -93,6 +91,63 @@ namespace STVRogue.GameLogic
                 accelerated = false;
             }
         }
+
+        // Inventory Checking
+        public void DisplayInventory()
+        {
+            int healingpotions = 0;
+            int crystals = 0;
+            for (int t = 0; t < bag.Count; t++)
+            {
+                if (bag[t].GetType().Name == "HealingPotion")
+                    healingpotions++;
+                if (bag[t].GetType().Name == "Crystal")
+                    crystals++;
+            }
+            Console.WriteLine("You have {0} Healingpotions in your bag.", healingpotions);
+            Console.WriteLine("You have {0} Crystals in your bag.", crystals);
+        }
+        public void useHealingPotion()
+        {
+            bool haspotion = false;
+            int potion = 0;
+            for (int t = 0; t < bag.Count; t++)
+            {
+                if (bag[t].GetType().Name == "HealingPotion")
+                {
+                    haspotion = true;
+                    potion = t;
+                }
+            }
+            if (haspotion)
+            {
+                Item healingpotion = bag[potion];
+                use(healingpotion);
+            }
+            else
+                Console.WriteLine("You have no Healingpotions.");
+        }
+        public void useCrystal()
+        {
+            bool hascrystal = false;
+            int crystal = 0;
+            for (int t = 0; t < bag.Count; t++)
+            {
+                if (bag[t].GetType().Name == "Crystal")
+                {
+                    hascrystal = true;
+                    crystal = t;
+                }
+            }
+            if (hascrystal)
+            {
+                Item healingpotion = bag[crystal];
+                use(healingpotion);
+            }
+            else
+                Console.WriteLine("You have no crystalls in your inventory.");
+        }
+
         // For testing 
         public void AddNextCommand(int choice)
         {
