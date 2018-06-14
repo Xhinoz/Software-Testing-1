@@ -22,7 +22,7 @@ namespace STVRogue.GameLogic
             Logger.log("Creature " + id + " attacks " + foe.id + killMsg + ".");
         }
     }
-    
+
     public class Monster : Creature
     {
         public Pack pack;
@@ -89,6 +89,65 @@ namespace STVRogue.GameLogic
                     }
                 }
                 accelerated = false;
+            }
+        }
+
+        // Inventory Checking
+        public void DisplayInventory()
+        {
+            int healingpotions = 0;
+            int crystals = 0;
+            for (int t = 0; t < bag.Count; t++)
+            {
+                if (bag[t].GetType().Name == "HealingPotion")
+                    healingpotions++;
+                if (bag[t].GetType().Name == "Crystal")
+                    crystals++;
+            }
+            Console.WriteLine("You have {0} Healingpotions in your bag.", healingpotions);
+            Console.WriteLine("You have {0} Crystals in your bag.", crystals);
+        }
+        // 1 for potion, 2 for crystal
+        public void useBagItem(int item)
+        {
+            bool haspotion = false;
+            int potion_index = 0;
+            bool hascrystal = false;
+            int crystal_index = 0;
+            for (int t = 0; t < bag.Count; t++)
+            {
+                if (bag[t].GetType().Name == "HealingPotion")
+                {
+                    haspotion = true;
+                    potion_index = t;
+                }
+                if (bag[t].GetType().Name == "Crystal")
+                {
+                    hascrystal = true;
+                    crystal_index = t;
+                }
+            }
+            if (item == 1)
+            {
+                if (haspotion)
+                {
+                    Item healingpotion = bag[potion_index];
+                    use(healingpotion);
+                    Console.WriteLine("You have healed yourself by drinking a potion.");
+                }
+                else
+                    Console.WriteLine("You have no Healingpotions in your inventory.");
+            }
+            if (item == 2)
+            {
+                if (hascrystal)
+                {
+                    Item crystal = bag[crystal_index];
+                    use(crystal);
+                    Console.WriteLine("You have been energized by a crystal.");
+                }
+                else
+                    Console.WriteLine("You have no Crystals in your inventory.");
             }
         }
         // For testing 

@@ -205,7 +205,7 @@ namespace STVRogue.GameLogic
             Logger.log("Player does " + userCommand);
             //Console.WriteLine()
             //// Player Action /////
-
+            // GUI(userCommand);
 
 
             //// Monster Actions /////
@@ -289,10 +289,56 @@ namespace STVRogue.GameLogic
             return false;
         }
 
-        public void GUI()
+        public void GUI(Command command)
         {
             Console.WriteLine("What would you like to do next? \n 1: Move to a node. \n 2: Use a healing potion. \n 3: Do nothing.");
-            
+            ConsoleKeyInfo info = Console.ReadKey();
+            int number;
+            switch (info.KeyChar)
+            {
+                case '1':
+                    // display neighbour nodes
+                    DisplayPaths();
+                    info = Console.ReadKey();
+                    number = int.Parse(info.KeyChar.ToString());
+                    Node destination = player.location.neighbors[number - 1]; // Using 1-9, not 0-9
+                    command.Move(player, destination);
+                    // Readinput > command.move(player, readinput)
+                    break;
+
+                case '2':
+                    // display inventory
+                    player.DisplayInventory();
+                    Console.WriteLine("1) Use Healingpotion.");
+                    info = Console.ReadKey();
+                    number = int.Parse(info.KeyChar.ToString());
+                    if (number == 1)          
+                        player.useBagItem(number);                  
+                    else
+                    {
+                        Console.WriteLine("Wrong input.");
+                        goto case '2'; // Repeating
+                    }
+                    // readinput > command.useitem(inputitem)            
+                    break;
+                case '3':
+                    command.DoNothing(player);
+                    break;
+                case 'x':
+                    // previous menu always
+                    break;
+            }
+        }
+
+        public void DisplayPaths()
+        {
+            for (int t = 0; t < player.location.neighbors.Count; t++)
+            {
+                string text = "";
+                text += (t + 1) + ") " + player.location.neighbors[t].id + ".";
+                text += "Path length to exit is " + Dungeon.shortestpath(player.location.neighbors[t], dungeon.exitNode) + ".";
+                Console.WriteLine(text);
+            }
         }
     }
 

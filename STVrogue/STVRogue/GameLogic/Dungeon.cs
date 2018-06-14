@@ -237,6 +237,9 @@ namespace STVRogue.GameLogic
                 Dungeon.alert = player.level;
 
                 // Choice?
+                // Console.WriteLine("The foe stands infront of you!")
+                // Flee, item, attack
+                // Console.ReadKey();
                 //int choice = RandomGenerator.rnd.Next(3);
                 int choice = player.GetNextCommand();
 

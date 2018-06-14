@@ -12,10 +12,10 @@ namespace STVRogue
         static void Main(string[] args)
         {
             Game game = new Game(5, 2, 20);
-            game.player.location = new Node("a dummy node");
+            // game.player.location = new Node("a dummy node");
             while (true)
             {
-                Console.ReadKey();
+                // Console.ReadKey();
                 game.update(new Command());
             }
         }
