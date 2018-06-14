@@ -10,7 +10,6 @@ namespace STVRogue.Utils
     /* Providing some useful predicates and functions to extract information from various
      * game entities.
      */
-     [Serializable]
     public class Predicates
     {
         public Boolean isPath(List<Node> path)

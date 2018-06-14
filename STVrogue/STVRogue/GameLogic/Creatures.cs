@@ -7,7 +7,6 @@ using STVRogue.Utils;
 
 namespace STVRogue.GameLogic
 {
-    [Serializable]
     public class Creature
     {
         public String id;
@@ -23,8 +22,7 @@ namespace STVRogue.GameLogic
             Logger.log("Creature " + id + " attacks " + foe.id + killMsg + ".");
         }
     }
-
-    [Serializable]
+    
     public class Monster : Creature
     {
         public Pack pack;
@@ -38,7 +36,7 @@ namespace STVRogue.GameLogic
             totalHP = HP;
         }
     }
-    [Serializable]
+
     public class Player : Creature
     {
         public Dungeon dungeon;

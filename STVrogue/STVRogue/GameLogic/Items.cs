@@ -7,7 +7,6 @@ using STVRogue.Utils;
 
 namespace STVRogue.GameLogic
 {
-    [Serializable]
     public class Item
     {
         public String id;
@@ -29,7 +28,6 @@ namespace STVRogue.GameLogic
             used = true;
         }
     }
-    [Serializable]
     public class HealingPotion : Item
     {
 
@@ -47,7 +45,6 @@ namespace STVRogue.GameLogic
             player.HP = (int)Math.Min(player.HPbase, player.HP + HPvalue);
         }
     }
-    [Serializable]
     public class Crystal : Item
     {
         public Crystal(String id) : base(id) { HPvalue = 0; }
