@@ -13,7 +13,7 @@ namespace STVRogue.GameLogic
 
         public void Move(Player player, Node n)
         {
-            writer.WriteLine("move " + n.id);
+            writer?.WriteLine("move " + n.id);
             if (player.location.GetType().Name == "Bridge") // Up player level when entering new zone
             {
                 Bridge bridge = player.location as Bridge;
@@ -35,7 +35,7 @@ namespace STVRogue.GameLogic
         }
         public void DoNothing(Player player)
         {
-            writer.WriteLine("nothing");
+            writer?.WriteLine("nothing");
             Console.WriteLine("{0} has decided to rest and not move.", player.name);
         }
     }
