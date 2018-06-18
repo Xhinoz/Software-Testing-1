@@ -97,6 +97,8 @@ namespace STVRogue.GameLogic
                         monsterPacks.Add(temp.Last()); //add to seperate monsterlist
                         Pack pack = temp.Last();
                         pack.level = i; // give zone level to pack
+                        pack.location = n; // add location to pack
+                        pack.dungeon = dungeon; // add dungeon to pack
                         temp.Remove(temp.Last());
 
                         int tempsumMonsters = 0;
@@ -205,7 +207,7 @@ namespace STVRogue.GameLogic
             Logger.log("Player does " + userCommand);
             //Console.WriteLine()
             //// Player Action /////
-            // GUI(userCommand);
+            GUI(userCommand);
 
 
             //// Monster Actions /////
@@ -298,7 +300,7 @@ namespace STVRogue.GameLogic
             {
                 case '1':
                     // display neighbour nodes
-                    DisplayPaths();
+                    DisplayPaths(player);
                     info = Console.ReadKey();
                     number = int.Parse(info.KeyChar.ToString());
                     Node destination = player.location.neighbors[number - 1]; // Using 1-9, not 0-9
@@ -312,8 +314,8 @@ namespace STVRogue.GameLogic
                     Console.WriteLine("1) Use Healingpotion.");
                     info = Console.ReadKey();
                     number = int.Parse(info.KeyChar.ToString());
-                    if (number == 1)          
-                        player.useBagItem(number);                  
+                    if (number == 1)   // use command item       
+                        command.UseItem(player, number);                  
                     else
                     {
                         Console.WriteLine("Wrong input.");
@@ -322,7 +324,7 @@ namespace STVRogue.GameLogic
                     // readinput > command.useitem(inputitem)            
                     break;
                 case '3':
-                    command.DoNothing(player);
+                    command.DoNothing(player, player.location);
                     break;
                 case 'x':
                     // previous menu always
@@ -330,14 +332,22 @@ namespace STVRogue.GameLogic
             }
         }
 
-        public void DisplayPaths()
+        public /*static*/ void DisplayPaths(Player player)
         {
             for (int t = 0; t < player.location.neighbors.Count; t++)
             {
                 string text = "";
                 text += (t + 1) + ") " + player.location.neighbors[t].id + ".";
-                text += "Path length to exit is " + Dungeon.shortestpath(player.location.neighbors[t], dungeon.exitNode) + ".";
+                text += "Path length to exit is " + Dungeon.shortestpath(player.location.neighbors[t], dungeon.exitNode).Count + ".";
                 Console.WriteLine(text);
+            }
+        }
+        public static void DisplayMonsters(Pack pack)
+        {
+            for (int t = 0; t < pack.members.Count; t++)
+            {
+                string text = "";
+
             }
         }
     }
