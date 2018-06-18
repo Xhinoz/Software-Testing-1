@@ -281,7 +281,7 @@ namespace STVRogue.GameLogic
 
         public void GUI(Command command)
         {
-            Console.WriteLine("What would you like to do next? \n 1: Move to a node. \n 2: Use a healing potion. \n 3: Do nothing.");
+            Console.WriteLine("What would you like to do next? \n1) Move to a node. \n2) Use a healing potion. \n3) Do nothing.");
             ConsoleKeyInfo info = Console.ReadKey();
             int number;
             switch (info.KeyChar)
@@ -328,17 +328,31 @@ namespace STVRogue.GameLogic
             for (int t = 0; t < player.location.neighbors.Count; t++)
             {
                 string text = "";
-                text += (t + 1) + ") " + player.location.neighbors[t].id + ".";
+                text += (t + 1) + ") Node " + player.location.neighbors[t].id + ", ";
                 text += "Path length to exit is " + Dungeon.shortestpath(player.location.neighbors[t], dungeon.exitNode).Count + ".";
                 Console.WriteLine(text);
             }
         }
-        public static void DisplayMonsters(Pack pack)
+        public static void DisplayPacks(List<Pack> packs)
         {
-            for (int t = 0; t < pack.members.Count; t++)
+            for (int t = 0; t < packs.Count; t++)
+            {
+                int healthpool = 0;
+                foreach (Monster monster in packs[t].members)
+                    healthpool += monster.HP;
+
+                string text = "";
+                text = (t + 1) + ") Pack " + packs[t].id + " has a total remaining healthpool of " + healthpool;
+                Console.WriteLine(text);
+            }
+        }
+        public static void DisplayMonsters(List<Monster> monsters)
+        {
+            for (int t = 0; t < monsters.Count; t++)
             {
                 string text = "";
-
+                text = (t + 1) + ") Monster " + monsters[t].id + " has " + monsters[t].HP + " health.";
+                Console.WriteLine(text);
             }
         }
     }

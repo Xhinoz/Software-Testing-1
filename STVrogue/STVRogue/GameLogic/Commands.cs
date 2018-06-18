@@ -13,7 +13,7 @@ namespace STVRogue.GameLogic
 
         public void Move(Player player, Node n)
         {
-            writer.WriteLine("move " + n.id);
+            //writer?.WriteLine("move " + n.id);
             if (player.location.GetType().Name == "Bridge") // Up player level when entering new zone
             {
                 Bridge bridge = player.location as Bridge;
@@ -25,7 +25,7 @@ namespace STVRogue.GameLogic
             }
             player.location = n;
             Console.WriteLine("{0} moved to {1}.", player.name, n.id);
-            //n.fight(player);
+            n.fight(player, this);
         }
         public void UseItem(Player player, int item)
         {
@@ -36,13 +36,13 @@ namespace STVRogue.GameLogic
         }
         public void DoNothing(Player player, Node location)
         {
-            writer?.WriteLine("nothing");
+            // writer?.WriteLine("nothing");
             Console.WriteLine("{0} has decided to rest and not move.", player.name);
+            //player.location.fight(player);
             //location.fight(player);
         }
         public void AttackMonster(Player player, Monster monster)
         {
-            player.Attack(monster);
             // crystal scenario
             if (player.accelerated)
             {
@@ -52,10 +52,11 @@ namespace STVRogue.GameLogic
                 foreach (Monster mon in monster.pack.members)
                     text += " " + mon.id;
 
-                // writer.WriteLine("attackmultiple {0}", text);
+                // writer?.WriteLine("attackmultiple {0}", text);
             }
             //else
-            //    writer.WriteLine("attack {0}, monster.id");
+            //    writer?.WriteLine("attack {0}, monster.id");
+            player.Attack(monster);
         }
     }
 }

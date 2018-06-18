@@ -238,11 +238,9 @@ namespace STVRogue.GameLogic
 
                 // Choice?
                 Console.WriteLine("A foe stands infront of you!");
-                Console.WriteLine("1) Flee \n 2) Use item in inventory \n 3) Attack a monster");
-                // Flee, item, attack
+                Console.WriteLine("1) Flee. \n2) Use item in your inventory and attack. \n3) Attack a monster.");
+                // Flee, item > attack, attack
                 int choice = int.Parse(Console.ReadKey().KeyChar.ToString());
-                //int choice = RandomGenerator.rnd.Next(3);
-                //int choice = player.GetNextCommand();
 
                 switch (choice)
                 { // Flee
@@ -305,20 +303,21 @@ namespace STVRogue.GameLogic
 
                     // Attack
                     case 3:
-                        // Choice?
-                        int rand_pack = RandomGenerator.rnd.Next(packs.Count);
-                        int rand_monster = RandomGenerator.rnd.Next(packs[rand_pack].members.Count);
-                        Monster monster = packs[rand_pack].members[rand_monster];
-                        // player.Attack(monster);
-
+                        // GUI Monster choice 
+                        Console.WriteLine("Choose the pack and monster you want to attack.");
+                        Game.DisplayPacks(packs);
+                        int pack_choice = int.Parse(Console.ReadKey().KeyChar.ToString()) - 1; // 0 indexed
+                        Game.DisplayMonsters(packs[pack_choice].members);
+                        int monster_choice = int.Parse(Console.ReadKey().KeyChar.ToString()) - 1;
+                        Monster monster = packs[pack_choice].members[monster_choice];
                         commands.AttackMonster(player, monster);
 
-                        if (packs[rand_pack].members.Count == 0) // Pack died
-                            packs.RemoveAt(rand_pack);
+                        if (packs[pack_choice].members.Count == 0) // Pack died
+                            packs.RemoveAt(pack_choice);
 
                         if (packs.Count != 0) // Monster Turn; Still Contested
                         {
-                            rand_pack = RandomGenerator.rnd.Next(packs.Count);
+                            int rand_pack = RandomGenerator.rnd.Next(packs.Count);
                             int HP = 0;
                             int totalHP = 0;
                             foreach (Monster monst in packs[rand_pack].members)
