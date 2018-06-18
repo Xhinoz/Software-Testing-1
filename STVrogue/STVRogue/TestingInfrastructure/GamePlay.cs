@@ -71,10 +71,10 @@ namespace STVRogue.GameLogic
                 command.Move(g.player, Dungeon.nodes[gamedata[t].Split(' ')[1]]);
             }
             else if (gamedata[t].Contains("nothing"))
-                command.DoNothing(g.player);
-            else if (gamedata[t].Contains("used"))
-                command.UseItem(g.player, g.player.lookUpItem(gamedata[t].Split(' ')[2]));
-
+                command.DoNothing(g.player, null);
+            else if (gamedata[t].Contains("used")) //item id to itemtype to decide which item to use
+                command.UseItem(g.player, g.player.bag[Int32.Parse(gamedata[t].Split(' ')[1])].IDtotype());
+                
             turn++;
         }
     }
