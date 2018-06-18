@@ -9,7 +9,7 @@ namespace STVRogue.GameLogic
 {
     public class Pack
     {
-        String id;
+        public String id;
         public List<Monster> members = new List<Monster>();
         int startingHP = 0;
         public Node location;

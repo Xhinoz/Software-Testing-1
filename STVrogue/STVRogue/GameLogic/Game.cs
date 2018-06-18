@@ -342,12 +342,24 @@ namespace STVRogue.GameLogic
                 Console.WriteLine(text);
             }
         }
-        public static void DisplayMonsters(Pack pack)
+        public static void DisplayPacks(List<Pack> packs)
         {
-            for (int t = 0; t < pack.members.Count; t++)
+            for (int t = 0; t < packs.Count; t++)
+            {
+                int healthpool = 0;
+                foreach (Monster monster in packs[t].members)
+                    healthpool += monster.HP;
+
+                string text = "";
+                text = (t + 1) + ") Pack " + packs[t].id + " has a total remaining healthpool of " + healthpool;
+            }
+        }
+        public static void DisplayMonsters(List<Monster> monsters)
+        {
+            for (int t = 0; t < monsters.Count; t++)
             {
                 string text = "";
-
+                text = (t + 1) + ") Monster " + monsters[t].id + " has " + monsters[t].HP + " health.";
             }
         }
     }
