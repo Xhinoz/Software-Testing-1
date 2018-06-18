@@ -236,8 +236,9 @@ namespace STVRogue.GameLogic
             {
                 Dungeon.alert = player.level;
 
-                // Choice?
+                // Choice
                 Console.WriteLine("A foe stands infront of you!");
+                Console.WriteLine("You have {0} health.", player.HP);
                 Console.WriteLine("1) Flee. \n2) Use item in your inventory and attack. \n3) Attack a monster.");
                 // Flee, item > attack, attack
                 int choice = int.Parse(Console.ReadKey().KeyChar.ToString());
