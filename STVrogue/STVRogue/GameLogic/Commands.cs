@@ -32,7 +32,7 @@ namespace STVRogue.GameLogic
              string item_id = player.useBagItem(item);
             //player.use(item);
             Console.WriteLine("{0} has used a Healing Potion.", player.name);
-            //writer.WriteLine("useitem {0}", item_id);
+            writer?.WriteLine("useitem {0}", item_id);
         }
         public void DoNothing(Player player, Node location)
         {

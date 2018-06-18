@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +13,12 @@ namespace STVRogue
         static void Main(string[] args)
         {
             Game game = new Game(5, 2, 20);
+            StreamWriter sw = new StreamWriter("test.txt");
             // game.player.location = new Node("a dummy node");
             while (true)
             {
                 // Console.ReadKey();
-                game.update(new Command());
+                game.update(new Command(sw));
             }
         }
     }

@@ -149,21 +149,20 @@ namespace STVRogue.GameLogic
         //seed items random percentage change to drop per node (chosen randomly)
         public bool SeedItems()
         {
-            int tempCrystalId = 0;
-            int tempPotionId = 0;
+            int tempId = 0;
             foreach(Node n in predicates.reachableNodes(dungeon.startNode))
             {
                 if(RandomGenerator.rnd.Next(24) == 0) // 1 out of 23 chance to place crystal on every node
                 {
-                    n.items.Add(new Crystal(tempCrystalId.ToString()));
-                    items.Add(new Crystal(tempCrystalId.ToString()));
-                    tempCrystalId++;
+                    n.items.Add(new Crystal(tempId.ToString()));
+                    items.Add(new Crystal(tempId.ToString()));
+                    tempId++;
                 }
                 if(RandomGenerator.rnd.Next(19) == 0) // 1 out of 20 chance to place potion every node
                 {
-                    n.items.Add(new HealingPotion(tempPotionId.ToString()));
-                    items.Add(new HealingPotion(tempPotionId.ToString()));
-                    tempPotionId++;
+                    n.items.Add(new HealingPotion(tempId.ToString()));
+                    items.Add(new HealingPotion(tempId.ToString()));
+                    tempId++;
                 }
             }
 

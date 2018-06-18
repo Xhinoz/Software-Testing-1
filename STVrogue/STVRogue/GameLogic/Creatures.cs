@@ -55,6 +55,13 @@ namespace STVRogue.GameLogic
             HP = HPbase;
         }
 
+        public Item lookUpItem(string id)
+        {
+            foreach (Item i in bag)
+                if (i.id == id) return i;
+            return null;
+        }
+
         public void use(Item item)
         {
             if (!bag.Contains(item) || item.used) throw new ArgumentException();
