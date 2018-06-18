@@ -16,7 +16,7 @@ namespace STVRogue.GameLogic
         public void MSTest_GamePlay_SerializeGame()
         {
             Game g = new Game(1, 1, 1);
-            g.SerializeGame();
+            
         }
 
         [TestMethod]

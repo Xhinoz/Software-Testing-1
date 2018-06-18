@@ -13,6 +13,7 @@ namespace STVRogue.GameLogic
 
         public void Move(Player player, Node n)
         {
+            
             writer?.WriteLine("move " + n.id);
             if (player.location.GetType().Name == "Bridge") // Up player level when entering new zone
             {
@@ -29,9 +30,9 @@ namespace STVRogue.GameLogic
         }
         public void UseItem(Player player, Item item)
         {
-
+            writer?.WriteLine("used item {0}", item.id);
             player.use(item);
-            Console.WriteLine("{0} has used a Healing Potion.", player.name);
+            Console.WriteLine("{0} has used a item.", player.name);
         }
         public void DoNothing(Player player)
         {
