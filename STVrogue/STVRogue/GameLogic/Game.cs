@@ -65,34 +65,23 @@ namespace STVRogue.GameLogic
             items = new List<Item>();
             monsterPacks = new List<Pack>();
         }
-        
-        /*public void SerializeGame()
-        {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(@"D:\prog\Software-Testing-1\STVrogue\GamePlays\ExampleNew.txt", FileMode.Create, FileAccess.Write);
 
-            formatter.Serialize(stream, this);
-            stream.Close();
-
-            //stream = new FileStream(@"E:\ExampleNew.txt", FileMode.Open, FileAccess.Read);
-            //Game objnew = (Game)formatter.Deserialize(stream);
-
-            //Console.WriteLine(objnew.ID);
-            //Console.WriteLine(objnew.Name);
-        }*/
 
         //create random packs then loop
         public bool SeedMonsterPacks2(uint difficultyLevel, uint numberOfMonsters)
         {
             List<Pack> temp = CreateMonsterPacks(difficultyLevel, numberOfMonsters);
 
+            if (numberOfMonsters == 0)
+                return true;
+
             foreach (Node n in predicates.reachableNodes(dungeon.startNode))
             {
-                for (int i = 1; i <= predicates.countNumberOfBridges(dungeon.startNode, dungeon.exitNode)+1; ++i)
+                for (int i = 1; i <= predicates.countNumberOfBridges(dungeon.startNode, dungeon.exitNode) + 1; ++i)
                 {
-                    if(predicates.countNumberOfBridges(dungeon.startNode, n) + 1 == i)
+                    if (predicates.countNumberOfBridges(dungeon.startNode, n) + 1 == i)
                     {
-                        
+
                         n.packs.Add(temp.Last()); //add pack to nodes
                         monsterPacks.Add(temp.Last()); //add to seperate monsterlist
                         Pack pack = temp.Last();
@@ -110,7 +99,7 @@ namespace STVRogue.GameLogic
                         if (tempsumMonsters > difficultyLevel * (predicates.countNumberOfBridges(dungeon.startNode, n) + 1))
                         {
 
-                                return false;
+                            return false;
                         }
 
                         if (temp.Count == 0)
@@ -121,7 +110,7 @@ namespace STVRogue.GameLogic
 
                 if (temp.Count == 0)
                     break;
-            } 
+            }
 
             return true;
         }
@@ -132,7 +121,7 @@ namespace STVRogue.GameLogic
             uint monsterPackId = 0;
             List<Pack> tempMonsterPacks = new List<Pack>();
 
-             uint monstersLeftToPack = numberOfMonsters;
+            uint monstersLeftToPack = numberOfMonsters;
 
             while (monstersLeftToPack > 0)
             {
@@ -150,15 +139,15 @@ namespace STVRogue.GameLogic
         public bool SeedItems()
         {
             int tempId = 0;
-            foreach(Node n in predicates.reachableNodes(dungeon.startNode))
+            foreach (Node n in predicates.reachableNodes(dungeon.startNode))
             {
-                if(RandomGenerator.rnd.Next(24) == 0) // 1 out of 23 chance to place crystal on every node
+                if (RandomGenerator.rnd.Next(24) == 0) // 1 out of 23 chance to place crystal on every node
                 {
                     n.items.Add(new Crystal(tempId.ToString()));
                     items.Add(new Crystal(tempId.ToString()));
                     tempId++;
                 }
-                if(RandomGenerator.rnd.Next(19) == 0) // 1 out of 20 chance to place potion every node
+                if (RandomGenerator.rnd.Next(19) == 0) // 1 out of 20 chance to place potion every node
                 {
                     n.items.Add(new HealingPotion(tempId.ToString()));
                     items.Add(new HealingPotion(tempId.ToString()));
@@ -175,9 +164,9 @@ namespace STVRogue.GameLogic
         public bool PotionProperty()
         {
             uint HPmonsters = 0;
-            foreach(Pack p in monsterPacks)
+            foreach (Pack p in monsterPacks)
             {
-                foreach(Monster m in p.members)
+                foreach (Monster m in p.members)
                 {
                     HPmonsters += (uint)m.HP;
                 }
@@ -188,12 +177,12 @@ namespace STVRogue.GameLogic
             {
                 HPpotions += p.HPvalue;
             }
-            foreach(Item p in player.bag)
+            foreach (Item p in player.bag)
             {
                 HPpotions += p.HPvalue;
             }
 
-            if(HPpotions < 0.8 * HPmonsters)
+            if (HPpotions < 0.8 * HPmonsters ||HPmonsters == 0)
                 return true;
 
             return false;
@@ -330,6 +319,9 @@ namespace STVRogue.GameLogic
                     break;
                 case 'x':
                     // previous menu always
+                    break;
+                default:
+                    command.DoNothing(player, player.location);
                     break;
             }
         }
