@@ -16,6 +16,7 @@ namespace STVRogue.GameLogic
         public Bridge[] bridges;
         public static uint counter;
         public static Dictionary<string, Node> nodes;
+        public static Dungeon current;
         private Random rng;
         private Predicates p = new Predicates();
         public static int alert = 0; // Alarm level
@@ -25,8 +26,8 @@ namespace STVRogue.GameLogic
         {
             if (level == 0)
                 throw new ArgumentException("Dungeon level must be at least 1.");
-            
             Logger.log("Creating a dungeon of difficulty level " + level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
+            current = this;
             difficultyLevel = level;
             M = nodeCapacityMultiplier;
             bridges = new Bridge[level];
@@ -197,7 +198,8 @@ namespace STVRogue.GameLogic
         public Node(String id)
         {
             this.id = id;
-            Dungeon.nodes[id] = this;
+            if (Dungeon.nodes != null)
+                Dungeon.nodes[id] = this;
         }
         
         /*Because the exit node being a bridge is unacceptable.*/
