@@ -232,84 +232,95 @@ namespace STVRogue.GameLogic
          * A fight terminates when either the node has no more monster-pack, or when
          * the player's HP is reduced to 0. 
          */
-        public void fight(Player player)
+        public void fight(Player player, Command commands)
         {
             while (player.location == this && packs.Count != 0) // Contested
             {
                 Dungeon.alert = player.level;
 
-                // Choice?
-                // Console.WriteLine("The foe stands infront of you!")
-                // Flee, item, attack
-                // Console.ReadKey();
-                //int choice = RandomGenerator.rnd.Next(3);
-                int choice = player.GetNextCommand();
+                // Choice
+                Console.WriteLine("A foe stands infront of you!");
+                Console.WriteLine("You have {0} health.", player.HP);
+                Console.WriteLine("1) Flee. \n2) Use item in your inventory and attack. \n3) Attack a monster.");
+                // Flee, item > attack, attack
+                int choice = int.Parse(Console.ReadKey().KeyChar.ToString());
 
                 switch (choice)
                 { // Flee
-                    case 0:
+                    case 1:
                         // Choice?
-                        int random = RandomGenerator.rnd.Next(neighbors.Count);
-                        Node destination = neighbors[random];
-                        player.location = destination;
+                        //Game.DisplayPaths(player);
+                        choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        Node destination = neighbors[choice - 1];
+                        commands.Move(player, destination);
                         break;
                     // Use item
-                    case 1:
+                    case 2:
                         // Choice
-                        int itemchoice;
-                        bool haspotion = false;
-                        int potion_pos = -1;
-                        bool hascrystal = false;
-                        int crystal_pos = -1;
-                        // Search for items in bag
-                        for (int t = 0; t < player.bag.Count; t++)
-                        {
-                            if (player.bag[t].GetType().Name == "HealingPotion")
-                            {
-                                haspotion = true;
-                                potion_pos = t;
-                            }
-                            if (player.bag[t].GetType().Name == "Crystal")
-                            {
-                                hascrystal = true;
-                                crystal_pos = t;
-                            }
-                        }
+                        player.DisplayInventory();
+                        Console.WriteLine("1) Healingpotion \n 2) Crystal");
+                        choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        commands.UseItem(player, choice);
 
-                        itemchoice = player.GetNextCommand();
-                        if (itemchoice == 0)
-                            if (haspotion)
-                            {
-                                Item potion = player.bag[potion_pos];
-                                player.use(potion);
-                            }
-                            else
-                                throw new ArgumentException();
-                        else if (itemchoice == 1)
-                            if (hascrystal)
-                            {
-                                Item crystal = player.bag[crystal_pos];
-                                player.use(crystal);
-                            }
-                            else
-                                throw new ArgumentException();
 
-                        goto case 2; // Continue to Attack
+                        //int itemchoice;
+                        //bool haspotion = false;
+                        //int potion_pos = -1;
+                        //bool hascrystal = false;
+                        //int crystal_pos = -1;
+                        //// Search for items in bag
+                        //for (int t = 0; t < player.bag.Count; t++)
+                        //{
+                        //    if (player.bag[t].GetType().Name == "HealingPotion")
+                        //    {
+                        //        haspotion = true;
+                        //        potion_pos = t;
+                        //    }
+                        //    if (player.bag[t].GetType().Name == "Crystal")
+                        //    {
+                        //        hascrystal = true;
+                        //        crystal_pos = t;
+                        //    }
+                        //}
+                        //choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        //commands.UseItem(player, choice);
+
+                        //if (itemchoice == 0)
+                        //    if (haspotion)
+                        //    {
+                        //        Item potion = player.bag[potion_pos];
+                        //        player.use(potion);
+                        //    }
+                        //    else
+                        //        throw new ArgumentException();
+                        //else if (itemchoice == 1)
+                        //    if (hascrystal)
+                        //    {
+                        //        Item crystal = player.bag[crystal_pos];
+                        //        player.use(crystal);
+                        //    }
+                        //    else
+                        //        throw new ArgumentException();
+
+                        goto case 3; // Continue to Attack
 
                     // Attack
-                    case 2:
-                        // Choice?
-                        int rand_pack = RandomGenerator.rnd.Next(packs.Count);
-                        int rand_monster = RandomGenerator.rnd.Next(packs[rand_pack].members.Count);
-                        Monster monster = packs[rand_pack].members[rand_monster];
-                        player.Attack(monster);
+                    case 3:
+                        // GUI Monster choice 
+                        Console.WriteLine("Choose the pack and monster you want to attack.");
+                        Game.DisplayPacks(packs);
+                        int pack_choice = int.Parse(Console.ReadKey().KeyChar.ToString()) - 1; // 0 indexed
+                        Game.DisplayMonsters(packs[pack_choice].members);
+                        int monster_choice = int.Parse(Console.ReadKey().KeyChar.ToString()) - 1;
+                        Monster monster = packs[pack_choice].members[monster_choice];
+                        commands.AttackMonster(player, monster);
 
-                        if (packs[rand_pack].members.Count == 0) // Pack died
-                            packs.RemoveAt(rand_pack);
+                        if (packs[pack_choice].members.Count == 0) // Pack died
+                            packs.RemoveAt(pack_choice);
 
                         if (packs.Count != 0) // Monster Turn; Still Contested
                         {
-                            rand_pack = RandomGenerator.rnd.Next(packs.Count);
+                            int rand_pack = RandomGenerator.rnd.Next(packs.Count);
                             int HP = 0;
                             int totalHP = 0;
                             foreach (Monster monst in packs[rand_pack].members)

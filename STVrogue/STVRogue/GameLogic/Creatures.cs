@@ -55,6 +55,13 @@ namespace STVRogue.GameLogic
             HP = HPbase;
         }
 
+        public Item lookUpItem(string id)
+        {
+            foreach (Item i in bag)
+                if (i.id == id) return i;
+            return null;
+        }
+
         public void use(Item item)
         {
             if (!bag.Contains(item) || item.used) throw new ArgumentException();
@@ -107,8 +114,8 @@ namespace STVRogue.GameLogic
             Console.WriteLine("You have {0} Healingpotions in your bag.", healingpotions);
             Console.WriteLine("You have {0} Crystals in your bag.", crystals);
         }
-        // 1 for potion, 2 for crystal
-        public void useBagItem(int item)
+        // 1 for potion, 2 for crystal // returns id of item
+        public string useBagItem(int item)
         {
             bool haspotion = false;
             int potion_index = 0;
@@ -134,6 +141,7 @@ namespace STVRogue.GameLogic
                     Item healingpotion = bag[potion_index];
                     use(healingpotion);
                     Console.WriteLine("You have healed yourself by drinking a potion.");
+                    return healingpotion.id;
                 }
                 else
                     Console.WriteLine("You have no Healingpotions in your inventory.");
@@ -145,10 +153,13 @@ namespace STVRogue.GameLogic
                     Item crystal = bag[crystal_index];
                     use(crystal);
                     Console.WriteLine("You have been energized by a crystal.");
+                    return crystal.id;
                 }
                 else
                     Console.WriteLine("You have no Crystals in your inventory.");
             }
+             // empty
+            return "";
         }
         // For testing 
         public void AddNextCommand(int choice)

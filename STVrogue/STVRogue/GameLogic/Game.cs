@@ -65,38 +65,29 @@ namespace STVRogue.GameLogic
             items = new List<Item>();
             monsterPacks = new List<Pack>();
         }
-        
-        /*public void SerializeGame()
-        {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(@"D:\prog\Software-Testing-1\STVrogue\GamePlays\ExampleNew.txt", FileMode.Create, FileAccess.Write);
 
-            formatter.Serialize(stream, this);
-            stream.Close();
-
-            //stream = new FileStream(@"E:\ExampleNew.txt", FileMode.Open, FileAccess.Read);
-            //Game objnew = (Game)formatter.Deserialize(stream);
-
-            //Console.WriteLine(objnew.ID);
-            //Console.WriteLine(objnew.Name);
-        }*/
 
         //create random packs then loop
         public bool SeedMonsterPacks2(uint difficultyLevel, uint numberOfMonsters)
         {
             List<Pack> temp = CreateMonsterPacks(difficultyLevel, numberOfMonsters);
 
+            if (numberOfMonsters == 0)
+                return true;
+
             foreach (Node n in predicates.reachableNodes(dungeon.startNode))
             {
-                for (int i = 1; i <= predicates.countNumberOfBridges(dungeon.startNode, dungeon.exitNode)+1; ++i)
+                for (int i = 1; i <= predicates.countNumberOfBridges(dungeon.startNode, dungeon.exitNode) + 1; ++i)
                 {
-                    if(predicates.countNumberOfBridges(dungeon.startNode, n) + 1 == i)
+                    if (predicates.countNumberOfBridges(dungeon.startNode, n) + 1 == i)
                     {
-                        
+
                         n.packs.Add(temp.Last()); //add pack to nodes
                         monsterPacks.Add(temp.Last()); //add to seperate monsterlist
                         Pack pack = temp.Last();
                         pack.level = i; // give zone level to pack
+                        pack.location = n; // add location to pack
+                        pack.dungeon = dungeon; // add dungeon to pack
                         temp.Remove(temp.Last());
 
                         int tempsumMonsters = 0;
@@ -108,7 +99,7 @@ namespace STVRogue.GameLogic
                         if (tempsumMonsters > difficultyLevel * (predicates.countNumberOfBridges(dungeon.startNode, n) + 1))
                         {
 
-                                return false;
+                            return false;
                         }
 
                         if (temp.Count == 0)
@@ -119,7 +110,7 @@ namespace STVRogue.GameLogic
 
                 if (temp.Count == 0)
                     break;
-            } 
+            }
 
             return true;
         }
@@ -130,7 +121,7 @@ namespace STVRogue.GameLogic
             uint monsterPackId = 0;
             List<Pack> tempMonsterPacks = new List<Pack>();
 
-             uint monstersLeftToPack = numberOfMonsters;
+            uint monstersLeftToPack = numberOfMonsters;
 
             while (monstersLeftToPack > 0)
             {
@@ -147,21 +138,20 @@ namespace STVRogue.GameLogic
         //seed items random percentage change to drop per node (chosen randomly)
         public bool SeedItems()
         {
-            int tempCrystalId = 0;
-            int tempPotionId = 0;
-            foreach(Node n in predicates.reachableNodes(dungeon.startNode))
+            int tempId = 0;
+            foreach (Node n in predicates.reachableNodes(dungeon.startNode))
             {
-                if(RandomGenerator.rnd.Next(24) == 0) // 1 out of 23 chance to place crystal on every node
+                if (RandomGenerator.rnd.Next(24) == 0) // 1 out of 23 chance to place crystal on every node
                 {
-                    n.items.Add(new Crystal(tempCrystalId.ToString()));
-                    items.Add(new Crystal(tempCrystalId.ToString()));
-                    tempCrystalId++;
+                    n.items.Add(new Crystal(tempId.ToString()));
+                    items.Add(new Crystal(tempId.ToString()));
+                    tempId++;
                 }
-                if(RandomGenerator.rnd.Next(19) == 0) // 1 out of 20 chance to place potion every node
+                if (RandomGenerator.rnd.Next(19) == 0) // 1 out of 20 chance to place potion every node
                 {
-                    n.items.Add(new HealingPotion(tempPotionId.ToString()));
-                    items.Add(new HealingPotion(tempPotionId.ToString()));
-                    tempPotionId++;
+                    n.items.Add(new HealingPotion(tempId.ToString()));
+                    items.Add(new HealingPotion(tempId.ToString()));
+                    tempId++;
                 }
             }
 
@@ -174,9 +164,9 @@ namespace STVRogue.GameLogic
         public bool PotionProperty()
         {
             uint HPmonsters = 0;
-            foreach(Pack p in monsterPacks)
+            foreach (Pack p in monsterPacks)
             {
-                foreach(Monster m in p.members)
+                foreach (Monster m in p.members)
                 {
                     HPmonsters += (uint)m.HP;
                 }
@@ -187,12 +177,12 @@ namespace STVRogue.GameLogic
             {
                 HPpotions += p.HPvalue;
             }
-            foreach(Item p in player.bag)
+            foreach (Item p in player.bag)
             {
                 HPpotions += p.HPvalue;
             }
 
-            if(HPpotions < 0.8 * HPmonsters)
+            if (HPpotions < 0.8 * HPmonsters ||HPmonsters == 0)
                 return true;
 
             return false;
@@ -202,15 +192,18 @@ namespace STVRogue.GameLogic
          */
         public Boolean update(Command userCommand)
         {
-            Logger.log("Player does " + userCommand);
-            //Console.WriteLine()
+            // Logger.log("Player does " + userCommand);
             //// Player Action /////
-            // GUI(userCommand);
+            GUI(userCommand);
 
+            // Cleans up all monsters that died
+            for (int t = monsterPacks.Count - 1; t >= 0; t--)
+                if (monsterPacks[t].members.Count == 0)
+                    monsterPacks.Remove(monsterPacks[t]);
 
             //// Monster Actions /////
             foreach (Pack pack in monsterPacks)
-            {
+            {                   
                 // move or do nothing
                 bool moving = RandomGenerator.rnd.NextDouble() > 0.5;
                 if (moving)
@@ -291,14 +284,14 @@ namespace STVRogue.GameLogic
 
         public void GUI(Command command)
         {
-            Console.WriteLine("What would you like to do next? \n 1: Move to a node. \n 2: Use a healing potion. \n 3: Do nothing.");
+            Console.WriteLine("What would you like to do next? \n1) Move to a node. \n2) Use a healing potion. \n3) Do nothing.");
             ConsoleKeyInfo info = Console.ReadKey();
             int number;
             switch (info.KeyChar)
             {
                 case '1':
                     // display neighbour nodes
-                    DisplayPaths();
+                    DisplayPaths(player);
                     info = Console.ReadKey();
                     number = int.Parse(info.KeyChar.ToString());
                     Node destination = player.location.neighbors[number - 1]; // Using 1-9, not 0-9
@@ -312,8 +305,8 @@ namespace STVRogue.GameLogic
                     Console.WriteLine("1) Use Healingpotion.");
                     info = Console.ReadKey();
                     number = int.Parse(info.KeyChar.ToString());
-                    if (number == 1)          
-                        player.useBagItem(number);                  
+                    if (number == 1)   // use command item       
+                        command.UseItem(player, number);                  
                     else
                     {
                         Console.WriteLine("Wrong input.");
@@ -322,21 +315,46 @@ namespace STVRogue.GameLogic
                     // readinput > command.useitem(inputitem)            
                     break;
                 case '3':
-                    command.DoNothing(player);
+                    command.DoNothing(player, player.location);
                     break;
                 case 'x':
                     // previous menu always
                     break;
+                default:
+                    command.DoNothing(player, player.location);
+                    break;
             }
         }
 
-        public void DisplayPaths()
+        public /*static*/ void DisplayPaths(Player player)
         {
             for (int t = 0; t < player.location.neighbors.Count; t++)
             {
                 string text = "";
-                text += (t + 1) + ") " + player.location.neighbors[t].id + ".";
-                text += "Path length to exit is " + Dungeon.shortestpath(player.location.neighbors[t], dungeon.exitNode) + ".";
+                text += (t + 1) + ") Node " + player.location.neighbors[t].id + ", ";
+                text += "Path length to exit is " + Dungeon.shortestpath(player.location.neighbors[t], dungeon.exitNode).Count + ".";
+                Console.WriteLine(text);
+            }
+        }
+        public static void DisplayPacks(List<Pack> packs)
+        {
+            for (int t = 0; t < packs.Count; t++)
+            {
+                int healthpool = 0;
+                foreach (Monster monster in packs[t].members)
+                    healthpool += monster.HP;
+
+                string text = "";
+                text = (t + 1) + ") Pack " + packs[t].id + " has a total remaining healthpool of " + healthpool;
+                Console.WriteLine(text);
+            }
+        }
+        public static void DisplayMonsters(List<Monster> monsters)
+        {
+            for (int t = 0; t < monsters.Count; t++)
+            {
+                string text = "";
+                text = (t + 1) + ") Monster " + monsters[t].id + " has " + monsters[t].HP + " health.";
                 Console.WriteLine(text);
             }
         }

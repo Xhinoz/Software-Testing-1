@@ -7,8 +7,6 @@ namespace STVRogue.GameLogic
     [TestClass]
     public class MSTest_Game
     {
-
-
         [TestMethod]
         public void MSTest_create_valid_game()
         {

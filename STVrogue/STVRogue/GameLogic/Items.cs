@@ -27,6 +27,13 @@ namespace STVRogue.GameLogic
             Logger.log("" + player.id + " uses " + this.GetType().Name + " " + id);
             used = true;
         }
+
+        public int IDtotype()
+        {
+            if (this.GetType().Name == "HealingPotion") return 1;
+            else return 2;
+
+        }
     }
     public class HealingPotion : Item
     {
