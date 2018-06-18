@@ -238,10 +238,9 @@ namespace STVRogue.GameLogic
 
                 // Choice?
                 Console.WriteLine("A foe stands infront of you!");
-                Console.WriteLine("1) Flee. \n 2) Use item in your inventory and attack. \n 3) Attack a monster.");
+                Console.WriteLine("1) Flee. \n2) Use item in your inventory and attack. \n3) Attack a monster.");
                 // Flee, item > attack, attack
                 int choice = int.Parse(Console.ReadKey().KeyChar.ToString());
-                //int choice = player.GetNextCommand();
 
                 switch (choice)
                 { // Flee

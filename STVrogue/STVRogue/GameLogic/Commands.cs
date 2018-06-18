@@ -25,7 +25,7 @@ namespace STVRogue.GameLogic
             }
             player.location = n;
             Console.WriteLine("{0} moved to {1}.", player.name, n.id);
-            //n.fight(player);
+            n.fight(player, this);
         }
         public void UseItem(Player player, int item)
         {
