@@ -15,7 +15,7 @@ namespace STVRogue
         {
             uint diff = 5;
             uint multi = 2;
-            uint monsters = 0;
+            uint monsters = 1;
             Game game = new Game(diff, multi, monsters);
             StreamWriter sw = new StreamWriter("test.txt", false);
             sw.AutoFlush = true;
