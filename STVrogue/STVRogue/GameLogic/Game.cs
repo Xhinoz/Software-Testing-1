@@ -192,15 +192,18 @@ namespace STVRogue.GameLogic
          */
         public Boolean update(Command userCommand)
         {
-            Logger.log("Player does " + userCommand);
-            //Console.WriteLine()
+            // Logger.log("Player does " + userCommand);
             //// Player Action /////
             GUI(userCommand);
 
+            // Cleans up all monsters that died
+            for (int t = monsterPacks.Count - 1; t >= 0; t--)
+                if (monsterPacks[t].members.Count == 0)
+                    monsterPacks.Remove(monsterPacks[t]);
 
             //// Monster Actions /////
             foreach (Pack pack in monsterPacks)
-            {
+            {                   
                 // move or do nothing
                 bool moving = RandomGenerator.rnd.NextDouble() > 0.5;
                 if (moving)
