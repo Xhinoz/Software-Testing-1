@@ -13,7 +13,7 @@ namespace STVRogue.GameLogic
 
         public void Move(Player player, Node n)
         {
-            writer.WriteLine("move " + n.id);
+            writer?.WriteLine("move " + n.id);
             if (player.location.GetType().Name == "Bridge") // Up player level when entering new zone
             {
                 Bridge bridge = player.location as Bridge;
@@ -51,10 +51,11 @@ namespace STVRogue.GameLogic
                 foreach (Monster mon in monster.pack.members)
                     text += " " + mon.id;
 
-                writer.WriteLine("attackmultiple {0}", text);
+                writer?.WriteLine("attackmultiple {0}", text);
             }
             else
                 writer?.WriteLine("attack {0}, monster.id");
+
             player.Attack(monster);
         }
     }

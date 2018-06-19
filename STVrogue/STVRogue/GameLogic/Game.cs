@@ -147,7 +147,7 @@ namespace STVRogue.GameLogic
                     items.Add(new Crystal(tempId.ToString()));
                     tempId++;
                 }
-                if (RandomGenerator.rnd.Next(19) == 0) // 1 out of 20 chance to place potion every node
+                if (RandomGenerator.rnd.Next(50) == 0) // 1 out of 20 chance to place potion every node
                 {
                     n.items.Add(new HealingPotion(tempId.ToString()));
                     items.Add(new HealingPotion(tempId.ToString()));
@@ -163,7 +163,7 @@ namespace STVRogue.GameLogic
 
         public bool PotionProperty()
         {
-            uint HPmonsters = 0;
+            uint HPmonsters = 100;
             foreach (Pack p in monsterPacks)
             {
                 foreach (Monster m in p.members)
@@ -182,7 +182,7 @@ namespace STVRogue.GameLogic
                 HPpotions += p.HPvalue;
             }
 
-            if (HPpotions < 0.8 * HPmonsters ||HPmonsters == 0)
+            if (HPpotions < 0.8 * HPmonsters)
                 return true;
 
             return false;

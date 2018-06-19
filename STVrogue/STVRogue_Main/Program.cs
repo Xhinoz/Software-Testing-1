@@ -16,8 +16,9 @@ namespace STVRogue
             uint diff = 5;
             uint multi = 2;
             uint monsters = 20;
+
             Game game = new Game(diff, multi, monsters);
-            StreamWriter sw = new StreamWriter("test.txt", false);
+            StreamWriter sw = new StreamWriter(@"..\..\..\testruns\test.txt", false);
             sw.AutoFlush = true;
 
             int seed = RandomGenerator.rnd.Next();

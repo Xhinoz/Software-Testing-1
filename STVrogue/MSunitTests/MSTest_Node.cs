@@ -20,7 +20,7 @@ namespace STVRogue.GameLogic
             pack.location = node;
 
             player.AddNextCommand(0);
-            node.fight(player);
+            //node.fight(player);
             Assert.AreNotEqual(player.location, node);
             Assert.AreEqual(player.location, node2);
         }
@@ -40,7 +40,7 @@ namespace STVRogue.GameLogic
             Item potion = new HealingPotion("potion");
             player.bag.Add(potion);
             player.AddNextCommand(1, 0, 2);
-            node.fight(player);
+            //node.fight(player);
             Assert.IsFalse(player.bag.Contains(potion));
         }
         [TestMethod]
@@ -59,7 +59,7 @@ namespace STVRogue.GameLogic
             Item crystal = new Crystal("crystal");
             player.bag.Add(crystal);
             player.AddNextCommand(1, 1, 2);
-            node.fight(player);
+            //node.fight(player);
             Assert.IsFalse(player.bag.Contains(crystal));
         }
 
@@ -75,7 +75,7 @@ namespace STVRogue.GameLogic
             player.location = node;
 
             player.AddNextCommand(1, 0);
-            node.fight(player);
+            //node.fight(player);
         }
 
         [TestMethod]
@@ -90,7 +90,7 @@ namespace STVRogue.GameLogic
             player.location = node;
 
             player.AddNextCommand(1, 1);
-            node.fight(player);
+            //node.fight(player);
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@ namespace STVRogue.GameLogic
             Monster monster = pack.members[0];
             monster.HP = 1;
             player.AddNextCommand(2);
-            node.fight(player);
+            //node.fight(player);
 
             Assert.AreEqual(node.packs.Count, 0);
         }
@@ -124,7 +124,7 @@ namespace STVRogue.GameLogic
             Monster monster = pack.members[0];
             monster.HP = 6;
             player.AddNextCommand(2, 0, 2);
-            node.fight(player);
+            //node.fight(player);
             Assert.AreNotEqual(player.HP, player.HPbase);
         }
 
@@ -143,7 +143,7 @@ namespace STVRogue.GameLogic
             player.location = node;
 
             player.AddNextCommand(2, 1);
-            node.fight(player);
+            //node.fight(player);
             Assert.AreEqual(pack.location, node2);
         }
         [TestMethod]
@@ -165,7 +165,7 @@ namespace STVRogue.GameLogic
             player.location = node;
 
             player.AddNextCommand(2, 1, 0);
-            node.fight(player);
+            //node.fight(player);
             // One pack is at another node
             // One pack has attacked and damaged player
             Assert.AreNotEqual(player.HP, player.HPbase); 
@@ -190,7 +190,7 @@ namespace STVRogue.GameLogic
             player.location = node;
 
             player.AddNextCommand(2, 1, 0);
-            node.fight(player);
+            //node.fight(player);
             Assert.AreEqual(pack.location, node);
             Assert.AreNotEqual(player.HP, player.HPbase);
         }
