@@ -15,7 +15,7 @@ namespace STVRogue.GameLogic
         public uint M;
         public Bridge[] bridges;
         public static uint counter;
-        public static Dictionary<string, Node> nodes;
+        public static Dictionary<string, Node> nodes = new Dictionary<string, Node>();
         public static Dungeon current;
         private Random rng;
         private Predicates p = new Predicates();
@@ -34,6 +34,7 @@ namespace STVRogue.GameLogic
             rng = RandomGenerator.rnd;
             startNode = new Node("start");
             int nodes, conns;
+            
             do
             {
                 counter = level + 2;

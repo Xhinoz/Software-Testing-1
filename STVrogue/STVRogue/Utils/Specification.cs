@@ -8,6 +8,11 @@ namespace STVRogue.Utils
         bool test(Game g);
     }
 
+    public class NonNegativeHP_Spec : Specification
+    {
+        public bool test(Game G) { return G.player.HP >= 0; }
+    }
+
     public class Always : Specification
     {
         private Predicate<Game> p;
