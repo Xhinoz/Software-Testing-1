@@ -54,7 +54,7 @@ namespace STVRogue.GameLogic
                 writer?.WriteLine("attackmultiple {0}", text);
             }
             else
-                writer?.WriteLine("attack {0}, monster.id");
+                writer?.WriteLine("attack {0}", monster.id);
 
             player.Attack(monster);
         }

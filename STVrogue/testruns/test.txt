@@ -1,5 +1,6 @@
-1525878715
+402398882
 5
 2
-1
-move 1
+20
+nothing
+attack {0}, monster.id
