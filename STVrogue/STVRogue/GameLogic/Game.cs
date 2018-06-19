@@ -227,7 +227,6 @@ namespace STVRogue.GameLogic
                             }
                             temp_neighbours.RemoveAt(destination);
                             tried++;
-                            // if endzone > if pack.level == bridges + 1 >> movetowards player.location
                         }
                     }
                 }
@@ -236,14 +235,14 @@ namespace STVRogue.GameLogic
             return true;
         }
         // Valid destination in zone
-        public bool RZone(Pack pack, Node destination)
+        public static bool RZone(Pack pack, Node destination)
         {
             if (destination.GetType().Name == "Bridge") // Lower bridge
-                if (dungeon.level(destination) != pack.level)
+                if (Dungeon.current.level(destination) != pack.level)
                     return false;
 
-            if (pack.location.GetType().Name == "Bridge")      
-                if (pack.level == dungeon.level(pack.location)) // Redundant?
+            if (pack.location.GetType().Name == "Bridge") // Upper bridge 
+                if (pack.level == Dungeon.current.level(pack.location)) // Redundant?
                 {
                     Bridge bridge = pack.location as Bridge;
                     if (bridge.toNodes.Contains(destination))
@@ -252,16 +251,6 @@ namespace STVRogue.GameLogic
 
             return true;
         }
-        //public bool RNode(Pack pack, Node destination)
-        //{
-        //    bool moved = false;
-        //    while (!moved)
-        //    {
-
-        //    }
-        //    if (!pack.move(destination))
-        //        // try again
-        //}
         // Which packs act on Alert
         public bool RAlert(Pack pack)
         {
@@ -296,7 +285,6 @@ namespace STVRogue.GameLogic
                     number = int.Parse(info.KeyChar.ToString());
                     Node destination = player.location.neighbors[number - 1]; // Using 1-9, not 0-9
                     command.Move(player, destination);
-                    // Readinput > command.move(player, readinput)
                     break;
 
                 case '2':
@@ -311,8 +299,7 @@ namespace STVRogue.GameLogic
                     {
                         Console.WriteLine("Wrong input.");
                         goto case '2'; // Repeating
-                    }
-                    // readinput > command.useitem(inputitem)            
+                    }          
                     break;
                 case '3':
                     command.DoNothing(player, player.location);
@@ -326,13 +313,13 @@ namespace STVRogue.GameLogic
             }
         }
 
-        public /*static*/ void DisplayPaths(Player player)
+        public static void DisplayPaths(Player player)
         {
             for (int t = 0; t < player.location.neighbors.Count; t++)
             {
                 string text = "";
                 text += (t + 1) + ") Node " + player.location.neighbors[t].id + ", ";
-                text += "Path length to exit is " + Dungeon.shortestpath(player.location.neighbors[t], dungeon.exitNode).Count + ".";
+                text += "Path length to exit is " + Dungeon.shortestpath(player.location.neighbors[t], Dungeon.current.exitNode).Count + ".";
                 Console.WriteLine(text);
             }
         }
