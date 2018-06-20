@@ -258,10 +258,26 @@ namespace STVRogue.GameLogic
                     // Use item
                     case 2:
                         // Choice
-                        player.DisplayInventory();
-                        Console.WriteLine("1) Healingpotion \n 2) Crystal");
+                        int bag = player.DisplayInventory();
+                        Console.WriteLine("1) Healingpotion \n2) Crystal");
                         choice = int.Parse(Console.ReadKey().KeyChar.ToString());
-                        commands.UseItem(player, choice);
+                        if (choice == 1 && (bag == 1 || bag == 3))
+                            commands.UseItem(player, choice);
+                        else if (choice == 2 && (bag == 2 || bag == 3))
+                            commands.UseItem(player, choice);
+                        else if (choice != 1 && choice != 2) 
+                        {
+                            Console.WriteLine("Wrong input.");
+                                goto case 2; // Repeater
+                        }
+                        else // No items in inventory
+                        {
+                            Console.WriteLine("You don't have the item in your inventory!");
+                            Console.WriteLine("1) Flee \n2) Attack");
+                            choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                            if (choice == 1)
+                                goto case 1;
+                        }
 
                         goto case 3; // Continue to Attack
 

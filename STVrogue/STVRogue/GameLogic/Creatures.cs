@@ -99,8 +99,8 @@ namespace STVRogue.GameLogic
             }
         }
 
-        // Inventory Checking
-        public void DisplayInventory()
+        // Inventory Checking. Returns 1, 2, 3 or 0 depending on items.
+        public int DisplayInventory()
         {
             int healingpotions = 0;
             int crystals = 0;
@@ -113,6 +113,15 @@ namespace STVRogue.GameLogic
             }
             Console.WriteLine("You have {0} Healingpotions in your bag.", healingpotions);
             Console.WriteLine("You have {0} Crystals in your bag.", crystals);
+
+            if (healingpotions >= 1)
+                return 1;
+            if (crystals >= 1)
+                return 2;
+            if (healingpotions >= 1 && crystals >= 1)
+                return 3;
+
+            return 0;
         }
         // 1 for potion, 2 for crystal // returns id of item
         public string useBagItem(int item)
