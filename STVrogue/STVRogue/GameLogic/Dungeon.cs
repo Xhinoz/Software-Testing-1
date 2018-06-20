@@ -15,7 +15,7 @@ namespace STVRogue.GameLogic
         public uint M;
         public Bridge[] bridges;
         public static uint counter;
-        public static Dictionary<string, Node> nodes;
+        public static Dictionary<string, Node> nodes = new Dictionary<string, Node>();
         public static Dungeon current;
         private Random rng;
         private Predicates p = new Predicates();
@@ -34,6 +34,7 @@ namespace STVRogue.GameLogic
             rng = RandomGenerator.rnd;
             startNode = new Node("start");
             int nodes, conns;
+            
             do
             {
                 counter = level + 2;
@@ -263,8 +264,8 @@ namespace STVRogue.GameLogic
                 switch (choice)
                 { // Flee
                     case 1:
-                        // Choice?
-                        //Game.DisplayPaths(player);
+                        // Choice
+                        Game.DisplayPaths(player);
                         choice = int.Parse(Console.ReadKey().KeyChar.ToString());
                         Node destination = neighbors[choice - 1];
                         commands.Move(player, destination);
@@ -272,50 +273,26 @@ namespace STVRogue.GameLogic
                     // Use item
                     case 2:
                         // Choice
-                        player.DisplayInventory();
-                        Console.WriteLine("1) Healingpotion \n 2) Crystal");
+                        int bag = player.DisplayInventory();
+                        Console.WriteLine("1) Healingpotion \n2) Crystal");
                         choice = int.Parse(Console.ReadKey().KeyChar.ToString());
-                        commands.UseItem(player, choice);
-
-
-                        //int itemchoice;
-                        //bool haspotion = false;
-                        //int potion_pos = -1;
-                        //bool hascrystal = false;
-                        //int crystal_pos = -1;
-                        //// Search for items in bag
-                        //for (int t = 0; t < player.bag.Count; t++)
-                        //{
-                        //    if (player.bag[t].GetType().Name == "HealingPotion")
-                        //    {
-                        //        haspotion = true;
-                        //        potion_pos = t;
-                        //    }
-                        //    if (player.bag[t].GetType().Name == "Crystal")
-                        //    {
-                        //        hascrystal = true;
-                        //        crystal_pos = t;
-                        //    }
-                        //}
-                        //choice = int.Parse(Console.ReadKey().KeyChar.ToString());
-                        //commands.UseItem(player, choice);
-
-                        //if (itemchoice == 0)
-                        //    if (haspotion)
-                        //    {
-                        //        Item potion = player.bag[potion_pos];
-                        //        player.use(potion);
-                        //    }
-                        //    else
-                        //        throw new ArgumentException();
-                        //else if (itemchoice == 1)
-                        //    if (hascrystal)
-                        //    {
-                        //        Item crystal = player.bag[crystal_pos];
-                        //        player.use(crystal);
-                        //    }
-                        //    else
-                        //        throw new ArgumentException();
+                        if (choice == 1 && (bag == 1 || bag == 3))
+                            commands.UseItem(player, choice);
+                        else if (choice == 2 && (bag == 2 || bag == 3))
+                            commands.UseItem(player, choice);
+                        else if (choice != 1 && choice != 2) 
+                        {
+                            Console.WriteLine("Wrong input.");
+                                goto case 2; // Repeater
+                        }
+                        else // No items in inventory
+                        {
+                            Console.WriteLine("You don't have the item in your inventory!");
+                            Console.WriteLine("1) Flee \n2) Attack");
+                            choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                            if (choice == 1)
+                                goto case 1;
+                        }
 
                         goto case 3; // Continue to Attack
 
@@ -332,6 +309,7 @@ namespace STVRogue.GameLogic
 
                         if (packs[pack_choice].members.Count == 0) // Pack died
                             packs.RemoveAt(pack_choice);
+
 
                         if (packs.Count != 0) // Monster Turn; Still Contested
                         {
@@ -354,7 +332,11 @@ namespace STVRogue.GameLogic
                                 while (!fled && tried != neighbors.Count) // Randomly chooses neighbours and tries to move
                                 {
                                     int rand_neighbour = RandomGenerator.rnd.Next(temp_neighbours.Count);
-                                    fled = packs[rand_pack].move(temp_neighbours[rand_neighbour]);
+                                    if (Game.RZone(packs[rand_pack], temp_neighbours[rand_neighbour])) // Check to stay in zone 
+                                    {
+                                        fled = packs[rand_pack].move(temp_neighbours[rand_neighbour]);
+                                    }
+
                                     temp_neighbours.RemoveAt(rand_neighbour);
                                     tried++;
                                 }

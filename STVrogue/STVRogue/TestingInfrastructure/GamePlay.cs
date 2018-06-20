@@ -19,10 +19,10 @@ namespace STVRogue.GameLogic
         public GamePlay(string filename) //load a game to gamedata
         {
             command = new Command();
-            gamedata = System.IO.File.ReadAllLines(filename); //0 = seed , 1 2 3 init variables for game
+            gamedata = System.IO.File.ReadAllLines( @"..\..\..\testruns\" + filename); //0 = seed , 1 2 3 init variables for game
             turn = 0;
             RandomGenerator.initializeWithSeed(Int32.Parse(gamedata[0]));
-            Game g = new Game(UInt32.Parse(gamedata[1]), UInt32.Parse(gamedata[2]), UInt32.Parse(gamedata[3]));
+            g = new Game(UInt32.Parse(gamedata[1]), UInt32.Parse(gamedata[2]), UInt32.Parse(gamedata[3]));
         }
 
 

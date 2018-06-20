@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using STVRogue.Utils;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
@@ -10,25 +11,30 @@ namespace STVRogue.GameLogic
 {
     [TestClass]
     public class MSTest_GamePlay
-    { 
-
-        [TestMethod]
-        public void MSTest_GamePlay_SerializeGame()
+    {
+        public List<GamePlay> LoadSavedGamePlays(params string[] files)
         {
-            Game g = new Game(1, 1, 1);
-            // g.SerializeGame();
+            List<GamePlay> gp = new List<GamePlay>();
+            foreach(string s in files)
+            {
+                gp.Add(new GamePlay(s));
+            }
+
+            return gp;
         }
 
         [TestMethod]
-        public void MSTest_GamePlay_DeserializeGame()
+        public void MSTest_GamePlay_ReplayGame()
         {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(@"D:\prog\Software-Testing-1\STVrogue\GamePlays\ExampleNew.txt", FileMode.Open, FileAccess.Read);
-            Game objnew = (Game)formatter.Deserialize(stream);
+            List<GamePlay> gps = LoadSavedGamePlays("test.txt", "test.txt");
+            foreach(GamePlay gp in gps)
+            {
+                Specification S = new NonNegativeHP_Spec();
+                Assert.IsTrue(gp.Replay(S));
+            }
 
-            Debug.WriteLine(objnew.player.HP);
-            Debug.WriteLine(objnew.monsterPacks.Count.ToString());
-            
+            //GamePlay gp = new GamePlay("test.txt"); //test 1 gameplay
         }
+
     }
 }

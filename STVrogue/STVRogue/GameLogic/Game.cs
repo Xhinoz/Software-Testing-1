@@ -147,7 +147,7 @@ namespace STVRogue.GameLogic
                     items.Add(new Crystal(tempId.ToString()));
                     tempId++;
                 }
-                if (RandomGenerator.rnd.Next(19) == 0) // 1 out of 20 chance to place potion every node
+                if (RandomGenerator.rnd.Next(50) == 0) // 1 out of 20 chance to place potion every node
                 {
                     n.items.Add(new HealingPotion(tempId.ToString()));
                     items.Add(new HealingPotion(tempId.ToString()));
@@ -163,7 +163,7 @@ namespace STVRogue.GameLogic
 
         public bool PotionProperty()
         {
-            uint HPmonsters = 0;
+            uint HPmonsters = 100;
             foreach (Pack p in monsterPacks)
             {
                 foreach (Monster m in p.members)
@@ -182,7 +182,7 @@ namespace STVRogue.GameLogic
                 HPpotions += p.HPvalue;
             }
 
-            if (HPpotions < 0.8 * HPmonsters ||HPmonsters == 0)
+            if (HPpotions < 0.8 * HPmonsters)
                 return true;
 
             return false;
@@ -227,7 +227,6 @@ namespace STVRogue.GameLogic
                             }
                             temp_neighbours.RemoveAt(destination);
                             tried++;
-                            // if endzone > if pack.level == bridges + 1 >> movetowards player.location
                         }
                     }
                 }
@@ -236,14 +235,14 @@ namespace STVRogue.GameLogic
             return true;
         }
         // Valid destination in zone
-        public bool RZone(Pack pack, Node destination)
+        public static bool RZone(Pack pack, Node destination)
         {
             if (destination.GetType().Name == "Bridge") // Lower bridge
-                if (dungeon.level(destination) != pack.level)
+                if (Dungeon.current.level(destination) != pack.level)
                     return false;
 
-            if (pack.location.GetType().Name == "Bridge")      
-                if (pack.level == dungeon.level(pack.location)) // Redundant?
+            if (pack.location.GetType().Name == "Bridge") // Upper bridge 
+                if (pack.level == Dungeon.current.level(pack.location)) // Redundant?
                 {
                     Bridge bridge = pack.location as Bridge;
                     if (bridge.toNodes.Contains(destination))
@@ -252,16 +251,6 @@ namespace STVRogue.GameLogic
 
             return true;
         }
-        //public bool RNode(Pack pack, Node destination)
-        //{
-        //    bool moved = false;
-        //    while (!moved)
-        //    {
-
-        //    }
-        //    if (!pack.move(destination))
-        //        // try again
-        //}
         // Which packs act on Alert
         public bool RAlert(Pack pack)
         {
@@ -286,33 +275,43 @@ namespace STVRogue.GameLogic
         {
             Console.WriteLine("What would you like to do next? \n1) Move to a node. \n2) Use a healing potion. \n3) Do nothing.");
             ConsoleKeyInfo info = Console.ReadKey();
-            int number;
+            int choice;
             switch (info.KeyChar)
             {
                 case '1':
                     // display neighbour nodes
                     DisplayPaths(player);
                     info = Console.ReadKey();
-                    number = int.Parse(info.KeyChar.ToString());
-                    Node destination = player.location.neighbors[number - 1]; // Using 1-9, not 0-9
+                    choice = int.Parse(info.KeyChar.ToString());
+                    Node destination = player.location.neighbors[choice - 1]; // Using 1-9, not 0-9
                     command.Move(player, destination);
-                    // Readinput > command.move(player, readinput)
                     break;
 
                 case '2':
                     // display inventory
-                    player.DisplayInventory();
+                    int bag = player.DisplayInventory();
                     Console.WriteLine("1) Use Healingpotion.");
                     info = Console.ReadKey();
-                    number = int.Parse(info.KeyChar.ToString());
-                    if (number == 1)   // use command item       
-                        command.UseItem(player, number);                  
-                    else
+                    choice = int.Parse(info.KeyChar.ToString());
+                    if (choice == 1 && (bag == 1 || bag == 3))   // use command item       
+                        command.UseItem(player, choice);
+                    else if (choice != 1 || choice != 2)
                     {
                         Console.WriteLine("Wrong input.");
                         goto case '2'; // Repeating
                     }
-                    // readinput > command.useitem(inputitem)            
+                    else
+                    {
+                        Console.WriteLine("You have no potions in your inventory.");
+                        Console.WriteLine("1) Move to a node. \n2) Do nothing.");
+                        choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        if (choice == 1)
+                            goto case '1';
+                        else if (choice == 2)
+                            goto case '3';
+                        else
+                            goto default;
+                    }
                     break;
                 case '3':
                     command.DoNothing(player, player.location);
@@ -326,13 +325,13 @@ namespace STVRogue.GameLogic
             }
         }
 
-        public /*static*/ void DisplayPaths(Player player)
+        public static void DisplayPaths(Player player)
         {
             for (int t = 0; t < player.location.neighbors.Count; t++)
             {
                 string text = "";
                 text += (t + 1) + ") Node " + player.location.neighbors[t].id + ", ";
-                text += "Path length to exit is " + Dungeon.shortestpath(player.location.neighbors[t], dungeon.exitNode).Count + ".";
+                text += "Path length to exit is " + Dungeon.shortestpath(player.location.neighbors[t], Dungeon.current.exitNode).Count + ".";
                 Console.WriteLine(text);
             }
         }
