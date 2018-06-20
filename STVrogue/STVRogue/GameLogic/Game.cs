@@ -39,6 +39,10 @@ namespace STVRogue.GameLogic
 
             do
             {
+                // Clear each time 
+                items.Clear();
+                monsterPacks.Clear();
+
                 validGame = true;
                 Logger.log("Creating a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
                            + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
@@ -195,6 +199,8 @@ namespace STVRogue.GameLogic
             // Logger.log("Player does " + userCommand);
             //// Player Action /////
             GUI(userCommand);
+            if (player.location == dungeon.exitNode)
+                Console.WriteLine("Congratulations, you've succeeded and beat the dungeon!");
 
             // Cleans up all monsters that died
             for (int t = monsterPacks.Count - 1; t >= 0; t--)
@@ -295,7 +301,7 @@ namespace STVRogue.GameLogic
                     choice = int.Parse(info.KeyChar.ToString());
                     if (choice == 1 && (bag == 1 || bag == 3))   // use command item       
                         command.UseItem(player, choice);
-                    else if (choice != 1 || choice != 2)
+                    else if (choice != 1 && choice != 2)
                     {
                         Console.WriteLine("Wrong input.");
                         goto case '2'; // Repeating

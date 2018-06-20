@@ -1,5 +1,14 @@
-103164974
+181181385
 5
 2
 20
 move 1
+move 2
+move 8
+move 3
+move 4
+move 15
+move 5
+move 6
+move 5
+move 6
