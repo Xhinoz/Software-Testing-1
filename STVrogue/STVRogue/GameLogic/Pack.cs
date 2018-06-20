@@ -41,7 +41,7 @@ namespace STVRogue.GameLogic
         public bool move(Node u)
         {
             if (!location.neighbors.Contains(u)) throw new ArgumentException();
-            int capacity = (int) (dungeon.M * (dungeon.level(u) + 1));
+            int capacity = (int) dungeon.capacity(u);
             // count monsters already in the node:
             foreach (Pack Q in u.packs)
                 capacity = capacity - Q.members.Count;           

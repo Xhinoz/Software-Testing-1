@@ -185,6 +185,21 @@ namespace STVRogue.GameLogic
                 return uint.Parse(d.id);
             return 0;
         }
+
+        /*To calculate the actual level without the weird "every node that isn't a Bridge is 0" rule*/
+        public uint nodeLevel(Node d)
+        {
+            uint level = g.dungeon.level(Dungeon.shortestpath(d, g.dungeon.exitNode).FirstOrDefault(n => n is Bridge));
+            if (level == 0)
+                level = g.dungeon.difficultyLevel + 1;
+            return level;
+        }
+
+        /*To calculate the capacity of a node*/
+        public uint capacity(Node d)
+        {
+            return M * (nodeLevel(d) + 1);
+        }
     }
 
     public class Node
