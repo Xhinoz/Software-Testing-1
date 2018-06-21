@@ -1,7 +1,0 @@
-68836188
-5
-2
-20
-move 1
-useitem 0
-attackmultiple 1 3_0

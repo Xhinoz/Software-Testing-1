@@ -46,6 +46,7 @@ namespace STVRogue.GameLogic
                 validGame = true;
                 player = new Player();
                 dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier);
+                player.dungeon = dungeon;
 
                 player.location = dungeon.startNode;
 
@@ -71,6 +72,20 @@ namespace STVRogue.GameLogic
             predicates = new Predicates();
             items = new List<Item>();
             monsterPacks = new List<Pack>();
+        }
+
+        public Monster LookUpMonster(string monsterId)
+        {
+            foreach(Pack p in monsterPacks)
+            {
+                foreach(Monster m in p.members)
+                {
+                    if (m.id == monsterId)
+                        return m;
+                }
+            }
+
+            return null;
         }
 
 
@@ -199,9 +214,8 @@ namespace STVRogue.GameLogic
          */
         public Boolean update(Command userCommand)
         {
-            // Logger.log("Player does " + userCommand);
-
             //// Player Action /////
+
             GUI(userCommand);
             if (player.location == dungeon.exitNode)
                 Console.WriteLine("Congratulations, you've succeeded and beat the dungeon!");
@@ -295,7 +309,7 @@ namespace STVRogue.GameLogic
                 case '1':
                     // display neighbour nodes
                     DisplayPaths(player);
-                    info = Console.ReadKey();
+                    info = Console.ReadKey(); Console.WriteLine();
                     choice = int.Parse(info.KeyChar.ToString());
                     Node destination = player.location.neighbors[choice - 1]; // Using 1-9, not 0-9
                     command.Move(player, destination);
@@ -305,7 +319,7 @@ namespace STVRogue.GameLogic
                     // display inventory
                     int bag = player.DisplayInventory();
                     Console.WriteLine("1) Use Healingpotion.");
-                    info = Console.ReadKey();
+                    info = Console.ReadKey(); Console.WriteLine();
                     choice = int.Parse(info.KeyChar.ToString());
                     if (choice == 1 && (bag == 1 || bag == 3))   // use command item       
                         command.UseItem(player, choice);
@@ -318,7 +332,7 @@ namespace STVRogue.GameLogic
                     {
                         Console.WriteLine("You have no potions in your inventory.");
                         Console.WriteLine("1) Move to a node. \n2) Do nothing.");
-                        choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        choice = int.Parse(Console.ReadKey().KeyChar.ToString()); Console.WriteLine();
                         if (choice == 1)
                             goto case '1';
                         else if (choice == 2)

@@ -36,25 +36,16 @@ namespace STVRogue.GameLogic
         public void DoNothing(Player player, Node location) // Possible to remove location parameter
         {
             writer?.WriteLine("nothing");
-            Console.WriteLine("{0} has decided to rest and not move.", player.name);
+            Console.WriteLine("{You decided to rest and not move.");
             player.location.fight(player, this);
             //location.fight(player, this);
         }
         public void AttackMonster(Player player, Monster monster)
         {
-            // crystal scenario
-            if (player.accelerated)
-            {
-                string text = "";
-                int amount = monster.pack.members.Count;
-                text += amount;
-                foreach (Monster mon in monster.pack.members)
-                    text += " " + mon.id;
-
-                writer?.WriteLine("attackmultiple {0}", text);
-            }
-            else
+            if(!player.accelerated)
                 writer?.WriteLine("attack {0}", monster.id);
+            else
+                writer?.WriteLine("attackcrystalized {0}", monster.id);
 
             player.Attack(monster);
         }
