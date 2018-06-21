@@ -30,7 +30,10 @@ namespace STVRogue.GameLogic
         public void UseItem(Player player, int item)
         {
             string item_id = player.useBagItem(item);
-            Console.WriteLine("{0} has used a Healing Potion.", player.name);
+            if (item == 1)
+                Console.WriteLine("{0} has used a Healing Potion.", player.name);
+            else
+                Console.WriteLine("{0} has used a Crystal.");
             writer?.WriteLine("useitem {0}", item_id);
         }
         public void DoNothing(Player player, Node location) // Possible to remove location parameter
