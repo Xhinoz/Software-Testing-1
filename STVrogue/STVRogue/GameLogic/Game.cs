@@ -32,13 +32,16 @@ namespace STVRogue.GameLogic
         //create a game until a valid one is made
         public Game(uint difficultyLevel, uint nodeCapcityMultiplier, uint numberOfMonsters)
         {
+            predicates = new Predicates();
+            items = new List<Item>();
+            monsterPacks = new List<Pack>();
 
 
             do
             {
-                predicates = new Predicates();
-                items = new List<Item>();
-                monsterPacks = new List<Pack>();
+                // Clear each time 
+                items.Clear();
+                monsterPacks.Clear();
 
                 validGame = true;
                 Logger.log("Creating a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
@@ -196,6 +199,8 @@ namespace STVRogue.GameLogic
             // Logger.log("Player does " + userCommand);
             //// Player Action /////
             GUI(userCommand);
+            if (player.location == dungeon.exitNode)
+                Console.WriteLine("Congratulations, you've succeeded and beat the dungeon!");
 
             // Cleans up all monsters that died
             for (int t = monsterPacks.Count - 1; t >= 0; t--)
@@ -276,31 +281,43 @@ namespace STVRogue.GameLogic
         {
             Console.WriteLine("What would you like to do next? \n1) Move to a node. \n2) Use a healing potion. \n3) Do nothing.");
             ConsoleKeyInfo info = Console.ReadKey();
-            int number;
+            int choice;
             switch (info.KeyChar)
             {
                 case '1':
                     // display neighbour nodes
                     DisplayPaths(player);
                     info = Console.ReadKey();
-                    number = int.Parse(info.KeyChar.ToString());
-                    Node destination = player.location.neighbors[number - 1]; // Using 1-9, not 0-9
+                    choice = int.Parse(info.KeyChar.ToString());
+                    Node destination = player.location.neighbors[choice - 1]; // Using 1-9, not 0-9
                     command.Move(player, destination);
                     break;
 
                 case '2':
                     // display inventory
-                    player.DisplayInventory();
+                    int bag = player.DisplayInventory();
                     Console.WriteLine("1) Use Healingpotion.");
                     info = Console.ReadKey();
-                    number = int.Parse(info.KeyChar.ToString());
-                    if (number == 1)   // use command item       
-                        command.UseItem(player, number);                  
-                    else
+                    choice = int.Parse(info.KeyChar.ToString());
+                    if (choice == 1 && (bag == 1 || bag == 3))   // use command item       
+                        command.UseItem(player, choice);
+                    else if (choice != 1 && choice != 2)
                     {
                         Console.WriteLine("Wrong input.");
                         goto case '2'; // Repeating
-                    }          
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have no potions in your inventory.");
+                        Console.WriteLine("1) Move to a node. \n2) Do nothing.");
+                        choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        if (choice == 1)
+                            goto case '1';
+                        else if (choice == 2)
+                            goto case '3';
+                        else
+                            goto default;
+                    }
                     break;
                 case '3':
                     command.DoNothing(player, player.location);

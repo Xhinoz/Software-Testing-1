@@ -1,7 +1,7 @@
 ﻿using STVRogue.GameLogic;
 using System;
 
-namespace STVRogue.Utils
+namespace STVRogue.GameLogic
 {
     public interface Specification
     {
