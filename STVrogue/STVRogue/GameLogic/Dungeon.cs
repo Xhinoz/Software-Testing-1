@@ -253,6 +253,8 @@ namespace STVRogue.GameLogic
             while (player.location == this && packs.Count != 0) // Contested
             {
                 Dungeon.alert = player.level;
+                foreach (Pack pack in packs)
+                    pack.fled = false;
 
                 // Choice
                 Console.WriteLine("A foe stands infront of you!");
@@ -314,6 +316,7 @@ namespace STVRogue.GameLogic
                         if (packs.Count != 0) // Monster Turn; Still Contested
                         {
                             int rand_pack = RandomGenerator.rnd.Next(packs.Count);
+                            Pack selectedpack = packs[rand_pack];
                             int HP = 0;
                             int totalHP = 0;
                             foreach (Monster monst in packs[rand_pack].members)
@@ -340,7 +343,10 @@ namespace STVRogue.GameLogic
                                     temp_neighbours.RemoveAt(rand_neighbour);
                                     tried++;
                                 }
-
+                                // fled pack set to true
+                                if (fled)
+                                    selectedpack.fled = true;
+                                    
                                 if (!fled) // Not succesfully fled
                                     packs[rand_pack].Attack(player);
                                 else
