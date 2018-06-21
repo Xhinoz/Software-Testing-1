@@ -44,8 +44,6 @@ namespace STVRogue.GameLogic
                 monsterPacks.Clear();
 
                 validGame = true;
-                Logger.log("Creating a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
-                           + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
                 player = new Player();
                 dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier);
 
@@ -61,6 +59,11 @@ namespace STVRogue.GameLogic
                 }
 
             } while (!validGame);
+            Logger.log("Created a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
+           + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
+
+            player.dungeon = dungeon;
+            player.bag.Add(new Crystal("0"));
         }
 
         public Game() //empty game for tests
@@ -145,13 +148,13 @@ namespace STVRogue.GameLogic
             int tempId = 0;
             foreach (Node n in predicates.reachableNodes(dungeon.startNode))
             {
-                if (RandomGenerator.rnd.Next(24) == 0) // 1 out of 23 chance to place crystal on every node
+                if (RandomGenerator.rnd.Next(5) == 0) // 1 out of 5 chance to place crystal on every node
                 {
                     n.items.Add(new Crystal(tempId.ToString()));
                     items.Add(new Crystal(tempId.ToString()));
                     tempId++;
                 }
-                if (RandomGenerator.rnd.Next(50) == 0) // 1 out of 20 chance to place potion every node
+                if (RandomGenerator.rnd.Next(30) == 0) // 1 out of 20 chance to place potion every node
                 {
                     n.items.Add(new HealingPotion(tempId.ToString()));
                     items.Add(new HealingPotion(tempId.ToString()));
@@ -281,6 +284,7 @@ namespace STVRogue.GameLogic
         {
             Console.WriteLine("What would you like to do next? \n1) Move to a node. \n2) Use a healing potion. \n3) Do nothing.");
             ConsoleKeyInfo info = Console.ReadKey();
+            Console.WriteLine("");
             int choice;
             switch (info.KeyChar)
             {
