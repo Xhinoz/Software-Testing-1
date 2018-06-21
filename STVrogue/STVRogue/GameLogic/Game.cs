@@ -32,13 +32,14 @@ namespace STVRogue.GameLogic
         //create a game until a valid one is made
         public Game(uint difficultyLevel, uint nodeCapcityMultiplier, uint numberOfMonsters)
         {
-            predicates = new Predicates();
-            items = new List<Item>();
-            monsterPacks = new List<Pack>();
 
 
             do
             {
+                predicates = new Predicates();
+                items = new List<Item>();
+                monsterPacks = new List<Pack>();
+
                 validGame = true;
                 Logger.log("Creating a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
                            + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");

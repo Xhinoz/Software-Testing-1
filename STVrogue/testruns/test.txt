@@ -1,6 +1,5 @@
-402398882
+443414119
 5
 2
 20
-nothing
-attack {0}, monster.id
+move 9
