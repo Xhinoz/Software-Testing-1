@@ -73,6 +73,20 @@ namespace STVRogue.GameLogic
             monsterPacks = new List<Pack>();
         }
 
+        public Monster LookUpMonster(string monsterId)
+        {
+            foreach(Pack p in monsterPacks)
+            {
+                foreach(Monster m in p.members)
+                {
+                    if (m.id == monsterId)
+                        return m;
+                }
+            }
+
+            return null;
+        }
+
 
         //create random packs then loop
         public bool SeedMonsterPacks2(uint difficultyLevel, uint numberOfMonsters)
@@ -292,7 +306,7 @@ namespace STVRogue.GameLogic
                 case '1':
                     // display neighbour nodes
                     DisplayPaths(player);
-                    info = Console.ReadKey();
+                    info = Console.ReadKey(); Console.WriteLine();
                     choice = int.Parse(info.KeyChar.ToString());
                     Node destination = player.location.neighbors[choice - 1]; // Using 1-9, not 0-9
                     command.Move(player, destination);
@@ -302,7 +316,7 @@ namespace STVRogue.GameLogic
                     // display inventory
                     int bag = player.DisplayInventory();
                     Console.WriteLine("1) Use Healingpotion.");
-                    info = Console.ReadKey();
+                    info = Console.ReadKey(); Console.WriteLine();
                     choice = int.Parse(info.KeyChar.ToString());
                     if (choice == 1 && (bag == 1 || bag == 3))   // use command item       
                         command.UseItem(player, choice);
@@ -315,7 +329,7 @@ namespace STVRogue.GameLogic
                     {
                         Console.WriteLine("You have no potions in your inventory.");
                         Console.WriteLine("1) Move to a node. \n2) Do nothing.");
-                        choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        choice = int.Parse(Console.ReadKey().KeyChar.ToString()); Console.WriteLine();
                         if (choice == 1)
                             goto case '1';
                         else if (choice == 2)

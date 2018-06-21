@@ -1,7 +1,5 @@
-68836188
+92028781
 5
 2
 20
-move 1
-useitem 0
-attackmultiple 1 3_0
+nothing
