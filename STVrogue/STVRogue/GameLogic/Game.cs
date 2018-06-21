@@ -48,6 +48,7 @@ namespace STVRogue.GameLogic
                            + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
                 player = new Player();
                 dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier);
+                player.dungeon = dungeon;
 
                 player.location = dungeon.startNode;
 
@@ -196,9 +197,8 @@ namespace STVRogue.GameLogic
          */
         public Boolean update(Command userCommand)
         {
-            // Logger.log("Player does " + userCommand);
-
             //// Player Action /////
+
             GUI(userCommand);
             if (player.location == dungeon.exitNode)
                 Console.WriteLine("Congratulations, you've succeeded and beat the dungeon!");
