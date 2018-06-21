@@ -21,7 +21,7 @@ namespace STVRogue
             StreamWriter sw = new StreamWriter(@"..\..\..\testruns\test.txt", false);
             sw.AutoFlush = true;
 
-            int seed = RandomGenerator.rnd.Next(100000000);
+            int seed = RandomGenerator.rnd.Next(10000000);
             RandomGenerator.initializeWithSeed(seed);
 
             sw.WriteLine(seed);

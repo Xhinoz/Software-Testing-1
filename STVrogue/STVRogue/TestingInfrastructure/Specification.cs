@@ -13,6 +13,11 @@ namespace STVRogue.GameLogic
         public bool test(Game G) { return G.player.HP >= 0; }
     }
 
+    public class HPBelow100_Spec : Specification
+    {
+        public bool test(Game G) { return G.player.HP > 100;  }
+    }
+
     public class Always : Specification
     {
         private Predicate<Game> p;

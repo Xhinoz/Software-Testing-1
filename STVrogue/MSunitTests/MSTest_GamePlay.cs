@@ -26,10 +26,10 @@ namespace STVRogue.GameLogic
         [TestMethod]
         public void MSTest_GamePlay_ReplayGame()
         {
-            List<GamePlay> gps = LoadSavedGamePlays("test.txt", "test.txt");
+            List<GamePlay> gps = LoadSavedGamePlays("test.txt");
             foreach(GamePlay gp in gps)
             {
-                Specification S = new NonNegativeHP_Spec();
+                Specification S = new HPBelow100_Spec();
                 Assert.IsTrue(gp.Replay(S));
             }
 
