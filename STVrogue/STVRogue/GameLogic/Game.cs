@@ -44,8 +44,6 @@ namespace STVRogue.GameLogic
                 monsterPacks.Clear();
 
                 validGame = true;
-                Logger.log("Creating a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
-                           + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
                 player = new Player();
                 dungeon = new Dungeon(difficultyLevel, nodeCapcityMultiplier);
                 player.dungeon = dungeon;
@@ -62,6 +60,11 @@ namespace STVRogue.GameLogic
                 }
 
             } while (!validGame);
+            Logger.log("Created a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
+           + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
+
+            player.dungeon = dungeon;
+            player.bag.Add(new Crystal("0"));
         }
 
         public Game() //empty game for tests
@@ -69,6 +72,20 @@ namespace STVRogue.GameLogic
             predicates = new Predicates();
             items = new List<Item>();
             monsterPacks = new List<Pack>();
+        }
+
+        public Monster LookUpMonster(string monsterId)
+        {
+            foreach(Pack p in monsterPacks)
+            {
+                foreach(Monster m in p.members)
+                {
+                    if (m.id == monsterId)
+                        return m;
+                }
+            }
+
+            return null;
         }
 
 
@@ -146,13 +163,13 @@ namespace STVRogue.GameLogic
             int tempId = 0;
             foreach (Node n in predicates.reachableNodes(dungeon.startNode))
             {
-                if (RandomGenerator.rnd.Next(24) == 0) // 1 out of 23 chance to place crystal on every node
+                if (RandomGenerator.rnd.Next(5) == 0) // 1 out of 5 chance to place crystal on every node
                 {
                     n.items.Add(new Crystal(tempId.ToString()));
                     items.Add(new Crystal(tempId.ToString()));
                     tempId++;
                 }
-                if (RandomGenerator.rnd.Next(50) == 0) // 1 out of 20 chance to place potion every node
+                if (RandomGenerator.rnd.Next(30) == 0) // 1 out of 20 chance to place potion every node
                 {
                     n.items.Add(new HealingPotion(tempId.ToString()));
                     items.Add(new HealingPotion(tempId.ToString()));
@@ -282,13 +299,14 @@ namespace STVRogue.GameLogic
         {
             Console.WriteLine("What would you like to do next? \n1) Move to a node. \n2) Use a healing potion. \n3) Do nothing.");
             ConsoleKeyInfo info = Console.ReadKey();
+            Console.WriteLine("");
             int choice;
             switch (info.KeyChar)
             {
                 case '1':
                     // display neighbour nodes
                     DisplayPaths(player);
-                    info = Console.ReadKey();
+                    info = Console.ReadKey(); Console.WriteLine();
                     choice = int.Parse(info.KeyChar.ToString());
                     Node destination = player.location.neighbors[choice - 1]; // Using 1-9, not 0-9
                     command.Move(player, destination);
@@ -298,7 +316,7 @@ namespace STVRogue.GameLogic
                     // display inventory
                     int bag = player.DisplayInventory();
                     Console.WriteLine("1) Use Healingpotion.");
-                    info = Console.ReadKey();
+                    info = Console.ReadKey(); Console.WriteLine();
                     choice = int.Parse(info.KeyChar.ToString());
                     if (choice == 1 && (bag == 1 || bag == 3))   // use command item       
                         command.UseItem(player, choice);
@@ -311,7 +329,7 @@ namespace STVRogue.GameLogic
                     {
                         Console.WriteLine("You have no potions in your inventory.");
                         Console.WriteLine("1) Move to a node. \n2) Do nothing.");
-                        choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        choice = int.Parse(Console.ReadKey().KeyChar.ToString()); Console.WriteLine();
                         if (choice == 1)
                             goto case '1';
                         else if (choice == 2)

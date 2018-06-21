@@ -74,7 +74,9 @@ namespace STVRogue.GameLogic
                 command.DoNothing(g.player, null);
             else if (gamedata[t].Contains("used")) //item id to itemtype to decide which item to use
                 command.UseItem(g.player, g.player.bag[Int32.Parse(gamedata[t].Split(' ')[1])].IDtotype());
-                
+            else if (gamedata[t].Contains("attack"))
+                command.AttackMonster(g.player, g.LookUpMonster(gamedata[t].Split(' ')[1]));
+            { }
             turn++;
         }
     }

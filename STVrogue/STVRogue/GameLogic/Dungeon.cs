@@ -26,7 +26,7 @@ namespace STVRogue.GameLogic
         {
             if (level == 0)
                 throw new ArgumentException("Dungeon level must be at least 1.");
-            Logger.log("Creating a dungeon of difficulty level " + level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
+            //Logger.log("Creating a dungeon of difficulty level " + level + ", node capacity multiplier " + nodeCapacityMultiplier + ".");
             current = this;
             difficultyLevel = level;
             M = nodeCapacityMultiplier;
@@ -190,9 +190,9 @@ namespace STVRogue.GameLogic
         /*To calculate the actual level without the weird "every node that isn't a Bridge is 0" rule*/
         public uint nodeLevel(Node d)
         {
-            uint level = g.dungeon.level(Dungeon.shortestpath(d, g.dungeon.exitNode).FirstOrDefault(n => n is Bridge));
+            uint level = this.level(Dungeon.shortestpath(d, this.exitNode).FirstOrDefault(n => n is Bridge));
             if (level == 0)
-                level = g.dungeon.difficultyLevel + 1;
+                level = this.difficultyLevel + 1;
             return level;
         }
 
