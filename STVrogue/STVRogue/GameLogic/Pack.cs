@@ -15,6 +15,7 @@ namespace STVRogue.GameLogic
         public Node location;
         public Dungeon dungeon;
         public int level;
+        public bool fled = false;
 
         public Pack(String id, uint n)
         {

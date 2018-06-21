@@ -200,6 +200,7 @@ namespace STVRogue.GameLogic
         public Boolean update(Command userCommand)
         {
             // Logger.log("Player does " + userCommand);
+
             //// Player Action /////
             GUI(userCommand);
             if (player.location == dungeon.exitNode)
