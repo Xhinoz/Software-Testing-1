@@ -1,0 +1,29 @@
+98079922
+5
+2
+40
+move 1
+attack 4_0
+attack 4_1
+move 2
+attack 3_0
+move 8
+attack 2_0
+attack 2_1
+attack 2_4
+attack 2_0
+attack 2_1
+attack 2_2
+attack 2_3
+attack 2_4
+attack 2_5
+nothing
+move 3
+attack 1_8
+attack 1_4
+attack 1_0
+attack 1_1
+attack 1_2
+attack 1_3
+attack 1_4
+attack 1_5

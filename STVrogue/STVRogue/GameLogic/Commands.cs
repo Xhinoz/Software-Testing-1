@@ -24,6 +24,11 @@ namespace STVRogue.GameLogic
                 }
             }
             player.location = n;
+            // Pick up items and remove from node
+            foreach (Item item in n.items)
+                player.bag.Add(item);
+            n.items.Clear();
+
             Console.WriteLine("{0} moved to {1}.", player.name, n.id);
             n.fight(player, this);
         }

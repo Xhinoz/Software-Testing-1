@@ -13,9 +13,9 @@ namespace STVRogue
     {
         static void Main(string[] args)
         {
-            uint diff = 5;
-            uint multi = 2;
-            uint monsters = 20;
+            uint diff = 6;
+            uint multi = 3;
+            uint monsters = 80;
 
             Game game = new Game(diff, multi, monsters);
             StreamWriter sw = new StreamWriter(@"..\..\..\testruns\test.txt", false);
