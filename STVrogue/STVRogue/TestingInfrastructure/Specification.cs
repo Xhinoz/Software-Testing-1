@@ -66,6 +66,7 @@ namespace STVRogue.GameLogic
     {
         private Specification s, t;
         private bool pre, post = true;
+        public bool relevant { get { return pre; } }
 
         public Implies(Specification s, Specification t)
         {
@@ -80,11 +81,6 @@ namespace STVRogue.GameLogic
             pre = pre && s.test(g);
             post = post && s.test(g);
             return !g.lastTurn || !pre || post;
-        }
-
-        public bool relevant()
-        {
-            return pre;
         }
     }
 }

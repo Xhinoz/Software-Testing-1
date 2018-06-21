@@ -19,7 +19,7 @@ namespace STVRogue.GameLogic
         public List<Pack> monsterPacks;
         private Predicates predicates;
         public bool validGame;
-        public bool lastTurn;
+        public bool lastTurn = false;
 
         /* This creates a player and a random dungeon of the given difficulty level and node-capacity
          * The player is positioned at the dungeon's starting-node.
@@ -213,34 +213,38 @@ namespace STVRogue.GameLogic
 
             //// Monster Actions /////
             foreach (Pack pack in monsterPacks)
-            {                   
-                // move or do nothing
-                bool moving = RandomGenerator.rnd.NextDouble() > 0.5;
-                if (moving)
+            {
+                pack.prevLoc = pack.location;
+                if (REndZone(pack)) // EndZone rule activated
+                    pack.moveTowards(player.location);
+                else
                 {
-                    if (REndZone(pack)) // EndZone rule activated
-                        pack.moveTowards(player.location);
-                    else if (RAlert(pack)) // if pack is in alarmed zone
-                        pack.moveTowards(player.location);           
-                    else
+                    // move or do nothing
+                    bool moving = RandomGenerator.rnd.NextDouble() > 0.5;
+                    if (moving)
                     {
-                        bool moved = false;
-                        int tried = 0;
-                        List<Node> temp_neighbours = new List<Node>(pack.location.neighbors);
-                        while (!moved && tried != pack.location.neighbors.Count) // tries till success
+
+                        if (RAlert(pack)) // if pack is in alarmed zone
+                            pack.moveTowards(player.location);
+                        else
                         {
-                            int destination = RandomGenerator.rnd.Next(temp_neighbours.Count);
-                            Node node_destination = temp_neighbours[destination];
-                            if (RZone(pack, node_destination)) // Stays in zone
+                            bool moved = false;
+                            int tried = 0;
+                            List<Node> temp_neighbours = new List<Node>(pack.location.neighbors);
+                            while (!moved && tried != pack.location.neighbors.Count) // tries till success
                             {
-                                moved = pack.move(node_destination);
+                                int destination = RandomGenerator.rnd.Next(temp_neighbours.Count);
+                                Node node_destination = temp_neighbours[destination];
+                                if (RZone(pack, node_destination)) // Stays in zone
+                                {
+                                    moved = pack.move(node_destination);
+                                }
+                                temp_neighbours.RemoveAt(destination);
+                                tried++;
                             }
-                            temp_neighbours.RemoveAt(destination);
-                            tried++;
                         }
                     }
                 }
-
             }
             return true;
         }
@@ -267,7 +271,6 @@ namespace STVRogue.GameLogic
             if (Dungeon.alert != 0) // Alarm raised
                 if (pack.level == Dungeon.alert)
                     return true;
-
             return false;
         }
         // When Endzone reached

@@ -45,6 +45,7 @@ namespace STVRogue.GameLogic
         public uint KillPoint = 0;
         public List<Item> bag = new List<Item>();
         public int level = 1;
+        public bool crystalUsed = false;
         // For Testing
         private List<int> commands = new List<int>();
         private int commanditerator = 0;

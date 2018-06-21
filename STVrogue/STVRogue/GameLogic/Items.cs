@@ -59,7 +59,7 @@ namespace STVRogue.GameLogic
         {
             base.use(player);
             player.accelerated = true;
-            if (player.location is Bridge) player.dungeon.disconnect(player.location as Bridge);
+            if (player.location is Bridge b) player.dungeon.disconnect(b);
         }
     }
 }
