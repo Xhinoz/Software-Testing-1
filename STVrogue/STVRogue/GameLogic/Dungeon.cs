@@ -171,7 +171,6 @@ namespace STVRogue.GameLogic
             return null;
         }
 
-
         /* To disconnect a bridge from the rest of the zone the bridge is in. */
         public void disconnect(Bridge b)
         {
@@ -190,16 +189,21 @@ namespace STVRogue.GameLogic
         /*To calculate the actual level without the weird "every node that isn't a Bridge is 0" rule*/
         public uint nodeLevel(Node d)
         {
-            uint level = this.level(Dungeon.shortestpath(d, this.exitNode).FirstOrDefault(n => n is Bridge));
-            if (level == 0)
-                level = this.difficultyLevel + 1;
-            return level;
+            uint result = level(shortestpath(d, exitNode).FirstOrDefault(n => n is Bridge));
+            if (result == 0)
+                result = difficultyLevel + 1;
+            return result;
         }
 
-        /*To calculate the capacity of a node*/
-        public uint capacity(Node d)
+        /*To calculate the remaining capacity of a node*/
+        public int capacity(Node d)
         {
-            return M * (nodeLevel(d) + 1);
+            return (int)(M * (nodeLevel(d) + 1)) - d.packs.Sum(p => p.members.Count);
+        }
+
+        public List<Node> containedNodes()
+        {
+            return p.reachableNodes(startNode);
         }
     }
 
@@ -281,11 +285,14 @@ namespace STVRogue.GameLogic
                         if (choice == 1 && (bag == 1 || bag == 3))
                             commands.UseItem(player, choice);
                         else if (choice == 2 && (bag == 2 || bag == 3))
+                        {
+                            player.crystalUsed = true;
                             commands.UseItem(player, choice);
-                        else if (choice != 1 && choice != 2) 
+                        }
+                        else if (choice != 1 && choice != 2)
                         {
                             Console.WriteLine("Wrong input.");
-                                goto case 2; // Repeater
+                            goto case 2; // Repeater
                         }
                         else // No items in inventory
                         {

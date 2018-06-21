@@ -1,0 +1,7 @@
+40579369
+6
+3
+80
+move 1
+useitem 0
+attackcrystalized 6_0

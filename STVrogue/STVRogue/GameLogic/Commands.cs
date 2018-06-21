@@ -24,13 +24,21 @@ namespace STVRogue.GameLogic
                 }
             }
             player.location = n;
+            // Pick up items and remove from node
+            foreach (Item item in n.items)
+                player.bag.Add(item);
+            n.items.Clear();
+
             Console.WriteLine("{0} moved to {1}.", player.name, n.id);
             n.fight(player, this);
         }
         public void UseItem(Player player, int item)
         {
             string item_id = player.useBagItem(item);
-            Console.WriteLine("{0} has used a Healing Potion.", player.name);
+            if (item == 1)
+                Console.WriteLine("{0} has used a Healing Potion.", player.name);
+            else
+                Console.WriteLine("{0} has used a Crystal.");
             writer?.WriteLine("useitem {0}", item_id);
         }
         public void DoNothing(Player player, Node location) // Possible to remove location parameter

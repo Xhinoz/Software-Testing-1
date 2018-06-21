@@ -1,0 +1,13 @@
+70875891
+5
+2
+20
+move 1
+move 2
+move 3
+move 4
+move 9
+move 11
+move 5
+move 13
+move exit

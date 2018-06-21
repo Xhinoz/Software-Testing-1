@@ -1,9 +1,0 @@
-332305
-5
-2
-20
-move 1
-attack 3_0
-nothing
-move start
-attack 5_0

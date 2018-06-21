@@ -13,6 +13,7 @@ namespace STVRogue.GameLogic
         public List<Monster> members = new List<Monster>();
         int startingHP = 0;
         public Node location;
+        public Node prevLoc;
         public Dungeon dungeon;
         public int level;
         public bool fled = false;
@@ -42,10 +43,7 @@ namespace STVRogue.GameLogic
         public bool move(Node u)
         {
             if (!location.neighbors.Contains(u)) throw new ArgumentException();
-            int capacity = (int) dungeon.capacity(u);
-            // count monsters already in the node:
-            foreach (Pack Q in u.packs)
-                capacity = capacity - Q.members.Count;           
+            int capacity = dungeon.capacity(u);         
             // capacity now expresses how much space the node has left
             if (members.Count > capacity)
             {
