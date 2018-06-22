@@ -1,7 +1,12 @@
-4172932
+1417462
 6
 3
 80
 move 1
-attack 6_0
-attack 6_1
+move start
+move 1
+move start
+move 1
+move start
+move 1
+move start
