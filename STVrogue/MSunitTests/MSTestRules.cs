@@ -19,8 +19,25 @@ namespace STVRogue.GameLogic
             testAlways(pNode);
         }
 
+        //Zone will remain on alert until the player leaves the zone
         [TestMethod]
         public void RAlert()
+        {
+            GamePlay[] runs = loadRuns();
+            foreach (var run in runs)
+            {
+                uint level = run.getState().dungeon.difficultyLevel;
+                for (int i = 1; i <= level + 1; i++)
+                {
+                    var s = new Unless(_ => Dungeon.alert == i, g => g.player.level != i);
+                    Assert.IsTrue(run.Replay(s));
+                }
+            }
+        }
+
+        //When on alert, monster packs will not move away from the player
+        [TestMethod]
+        public void RAlert2()
         {
             testAlways(pAlert);
         }
