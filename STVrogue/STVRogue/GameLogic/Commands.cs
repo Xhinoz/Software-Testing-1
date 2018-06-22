@@ -28,8 +28,6 @@ namespace STVRogue.GameLogic
 
             Console.WriteLine("{0} moved to {1}.", player.name, n.id);
             n.fight(player, this);
-            
-            //writer?.WriteLine("fightcommands" + " ")
         }
         public void UseItem(Player player, int item)
         {

@@ -2,12 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using STVRogue.Utils;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace STVRogue.GameLogic
 {
@@ -20,6 +15,7 @@ namespace STVRogue.GameLogic
         private Predicates predicates;
         public bool validGame;
         public bool lastTurn = false;
+        public bool combat = false;
 
         /* This creates a player and a random dungeon of the given difficulty level and node-capacity
          * The player is positioned at the dungeon's starting-node.
