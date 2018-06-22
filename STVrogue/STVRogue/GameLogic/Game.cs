@@ -160,13 +160,13 @@ namespace STVRogue.GameLogic
             int tempId = 0;
             foreach (Node n in predicates.reachableNodes(dungeon.startNode))
             {
-                if (RandomGenerator.rnd.Next(5) == 0) // 1 out of 5 chance to place crystal on every node
+                if (RandomGenerator.rnd.Next(5) <= 1) // 1 out of 5 chance to place crystal on every node
                 {
                     n.items.Add(new Crystal(tempId.ToString()));
                     items.Add(new Crystal(tempId.ToString()));
                     tempId++;
                 }
-                if (RandomGenerator.rnd.Next(30) == 0) // 1 out of 20 chance to place potion every node
+                if (RandomGenerator.rnd.Next(5) <= 1) // 1 out of 20 chance to place potion every node
                 {
                     n.items.Add(new HealingPotion(tempId.ToString()));
                     items.Add(new HealingPotion(tempId.ToString()));

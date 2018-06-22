@@ -55,7 +55,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="MSTestRules.cs" />
-    <Compile Include="MSTest_GamePlay.cs" />
     <Compile Include="MSTest_Game.cs" />
     <Compile Include="MSTest_Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

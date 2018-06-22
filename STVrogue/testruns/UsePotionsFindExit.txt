@@ -1,0 +1,20 @@
+5798690
+6
+3
+80
+move 1
+move start
+move 9
+move 1
+move 2
+move 3
+move 4
+move 5
+move 20
+move 22
+move 25
+move 6
+useitem 8
+useitem 3
+nothing
+move exit

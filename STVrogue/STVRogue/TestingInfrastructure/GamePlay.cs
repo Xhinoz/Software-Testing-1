@@ -76,7 +76,7 @@ namespace STVRogue.GameLogic
                 command.UseItem(g.player, g.player.bag[Int32.Parse(gamedata[t].Split(' ')[1])].IDtotype());
             else if (gamedata[t].Contains("attack"))
                 command.AttackMonster(g.player, g.LookUpMonster(gamedata[t].Split(' ')[1]));
-            { }
+            
             turn++;
         }
     }
