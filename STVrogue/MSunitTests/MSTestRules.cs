@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using STVRogue.Utils;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace STVRogue.GameLogic
@@ -62,7 +63,7 @@ namespace STVRogue.GameLogic
 
         private void testAlways(Predicate<Game> p)
         {
-            GamePlay[] runs = loadRuns();
+            List<GamePlay> runs = loadRunds("test.txt");
             foreach (var run in runs)
                 Assert.IsTrue(run.Replay(new Always(p)));
         }
@@ -71,7 +72,7 @@ namespace STVRogue.GameLogic
         Closures are needed for some of the predicates, so different function type requested.*/
         private void testImplies(Func<Game, Predicate<Game>> p, Func<Game, Predicate<Game>> q)
         {
-            GamePlay[] runs = loadRuns();
+            List<GamePlay> runs = loadRunds("test.txt");
             int i = 0;
             foreach (var run in runs)
             {
@@ -172,9 +173,16 @@ namespace STVRogue.GameLogic
             return Dungeon.shortestpath(u, p.location).Count;
         }
 
-        private GamePlay[] loadRuns()
+        private List<GamePlay> loadRunds(params string[] files)
         {
-            throw new NotImplementedException();
+            List<GamePlay> gp = new List<GamePlay>();
+            foreach (string s in files)
+            {
+                gp.Add(new GamePlay(s));
+            }
+
+            return gp;
         }
+      
     }
 }

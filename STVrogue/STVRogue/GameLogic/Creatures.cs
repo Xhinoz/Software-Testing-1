@@ -115,9 +115,9 @@ namespace STVRogue.GameLogic
             Console.WriteLine("You have {0} Healingpotions in your bag.", healingpotions);
             Console.WriteLine("You have {0} Crystals in your bag.", crystals);
 
-            if (healingpotions >= 1)
+            if (healingpotions >= 1 && crystals == 0)
                 return 1;
-            if (crystals >= 1)
+            if (crystals >= 1 && healingpotions == 0)
                 return 2;
             if (healingpotions >= 1 && crystals >= 1)
                 return 3;

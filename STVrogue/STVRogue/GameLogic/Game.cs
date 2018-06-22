@@ -62,9 +62,6 @@ namespace STVRogue.GameLogic
             } while (!validGame);
             Logger.log("Created a game of difficulty level " + difficultyLevel + ", node capacity multiplier "
            + nodeCapcityMultiplier + ", and " + numberOfMonsters + " monsters.");
-
-            player.dungeon = dungeon;
-            player.bag.Add(new Crystal("0"));
         }
 
         public Game() //empty game for tests
@@ -163,13 +160,13 @@ namespace STVRogue.GameLogic
             int tempId = 0;
             foreach (Node n in predicates.reachableNodes(dungeon.startNode))
             {
-                if (RandomGenerator.rnd.Next(5) == 0) // 1 out of 5 chance to place crystal on every node
+                if (RandomGenerator.rnd.Next(5) <= 1) // 1 out of 5 chance to place crystal on every node
                 {
                     n.items.Add(new Crystal(tempId.ToString()));
                     items.Add(new Crystal(tempId.ToString()));
                     tempId++;
                 }
-                if (RandomGenerator.rnd.Next(30) == 0) // 1 out of 20 chance to place potion every node
+                if (RandomGenerator.rnd.Next(5) <= 1) // 1 out of 20 chance to place potion every node
                 {
                     n.items.Add(new HealingPotion(tempId.ToString()));
                     items.Add(new HealingPotion(tempId.ToString()));
@@ -228,33 +225,36 @@ namespace STVRogue.GameLogic
             //// Monster Actions /////
             foreach (Pack pack in monsterPacks)
             {
-                pack.prevLoc = pack.location;
-                if (REndZone(pack)) // EndZone rule activated
-                    pack.moveTowards(player.location);
-                else
+                if (Dungeon.shortestpath(pack.location, player.location) != null)
                 {
-                    // move or do nothing
-                    bool moving = RandomGenerator.rnd.NextDouble() > 0.5;
-                    if (moving)
+                    pack.prevLoc = pack.location;
+                    if (REndZone(pack)) // EndZone rule activated
+                        pack.moveTowards(player.location);
+                    else
                     {
-
-                        if (RAlert(pack)) // if pack is in alarmed zone
-                            pack.moveTowards(player.location);
-                        else
+                        // move or do nothing
+                        bool moving = RandomGenerator.rnd.NextDouble() > 0.5;
+                        if (moving)
                         {
-                            bool moved = false;
-                            int tried = 0;
-                            List<Node> temp_neighbours = new List<Node>(pack.location.neighbors);
-                            while (!moved && tried != pack.location.neighbors.Count) // tries till success
+
+                            if (RAlert(pack)) // if pack is in alarmed zone
+                                pack.moveTowards(player.location);
+                            else
                             {
-                                int destination = RandomGenerator.rnd.Next(temp_neighbours.Count);
-                                Node node_destination = temp_neighbours[destination];
-                                if (RZone(pack, node_destination)) // Stays in zone
+                                bool moved = false;
+                                int tried = 0;
+                                List<Node> temp_neighbours = new List<Node>(pack.location.neighbors);
+                                while (!moved && tried != pack.location.neighbors.Count) // tries till success
                                 {
-                                    moved = pack.move(node_destination);
+                                    int destination = RandomGenerator.rnd.Next(temp_neighbours.Count);
+                                    Node node_destination = temp_neighbours[destination];
+                                    if (RZone(pack, node_destination)) // Stays in zone
+                                    {
+                                        moved = pack.move(node_destination);
+                                    }
+                                    temp_neighbours.RemoveAt(destination);
+                                    tried++;
                                 }
-                                temp_neighbours.RemoveAt(destination);
-                                tried++;
                             }
                         }
                     }

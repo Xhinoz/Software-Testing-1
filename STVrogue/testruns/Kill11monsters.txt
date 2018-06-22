@@ -1,0 +1,18 @@
+55946084
+6
+3
+50
+move 1
+attack 4_0
+move 2
+attack 3_0
+attack 3_1
+attack 3_2
+attack 3_3
+attack 3_4
+attack 3_5
+attack 3_6
+attack 3_7
+attack 3_8
+attack 3_9
+attack 3_9

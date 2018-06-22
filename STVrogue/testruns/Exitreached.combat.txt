@@ -1,0 +1,33 @@
+49009027
+6
+3
+50
+move 1
+attack 6_2
+attack 6_0
+attack 6_1
+attack 6_2
+move 2
+attack 5_0
+nothing
+nothing
+move 3
+attack 3_0
+attack 3_2
+attack 3_0
+attack 3_1
+attack 3_2
+move 4
+attack 2_0
+attack 2_1
+attack 2_2
+attack 2_3
+move 5
+move 6
+nothing
+nothing
+nothing
+nothing
+nothing
+nothing
+move exit
