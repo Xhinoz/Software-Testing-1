@@ -33,15 +33,16 @@ namespace STVRogue.GameLogic
             while(true)
             {
                 //test specifation holds in current state
+                g.lastTurn = turn >= gamedata.Length - 4;
                 bool ok = S.test(getState());
 
                 //if specification holds true continue to next turn
                 if(ok)
                 {
-                    if (turn < gamedata.Length - 4)
-                        replayTurn();
-                    else
+                    if (g.lastTurn)
                         break;
+                    else
+                        replayTurn();
                 
                 }
                 else
@@ -67,9 +68,7 @@ namespace STVRogue.GameLogic
         {
             uint t = turn + 4; //turns start from 4 in the array
             if (gamedata[t].Contains("move"))
-            {
                 command.Move(g.player, Dungeon.nodes[gamedata[t].Split(' ')[1]]);
-            }
             else if (gamedata[t].Contains("nothing"))
                 command.DoNothing(g.player, null);
             else if (gamedata[t].Contains("used")) //item id to itemtype to decide which item to use
