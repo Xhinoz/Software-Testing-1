@@ -252,7 +252,9 @@ namespace STVRogue.GameLogic
          * A fight terminates when either the node has no more monster-pack, or when
          * the player's HP is reduced to 0. 
          */
-        public void fight(Player player, Command commands)
+
+         // normal: mode == 0, gameplay: mode == 1
+        public void fight(Player player, Command commands /*, int mode*/)
         {
             while (player.location == this && packs.Count != 0) // Contested
             {
@@ -265,14 +267,29 @@ namespace STVRogue.GameLogic
                 Console.WriteLine("You have {0} health.", player.HP);
                 Console.WriteLine("1) Flee. \n2) Use item in your inventory and attack. \n3) Attack a monster.");
                 // Flee, item > attack, attack
-                int choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                int choice = 0;
+
+                //if (mode == 0)
+                //{
+                    choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                //    player.AddNextCommand(choice);
+                //}
+                //else
+                //    choice = player.GetNextCommand();
 
                 switch (choice)
                 { // Flee
                     case 1:
                         // Choice
                         Game.DisplayPaths(player);
-                        choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        //if (mode == 0)
+                        //{
+                            choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        //    player.AddNextCommand(choice);
+                        //}
+                        //else
+                        //    choice = player.GetNextCommand();
+
                         Node destination = neighbors[choice - 1];
                         commands.Move(player, destination);
                         break;
@@ -281,7 +298,13 @@ namespace STVRogue.GameLogic
                         // Choice
                         int bag = player.DisplayInventory();
                         Console.WriteLine("1) Healingpotion \n2) Crystal");
-                        choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        //if (mode == 0)
+                        //{
+                            choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        //    player.AddNextCommand(choice);
+                        //}
+                        //else
+                        //    choice = player.GetNextCommand();
                         if (choice == 1 && (bag == 1 || bag == 3))
                             commands.UseItem(player, choice);
                         else if (choice == 2 && (bag == 2 || bag == 3))
@@ -310,9 +333,23 @@ namespace STVRogue.GameLogic
                         // GUI Monster choice 
                         Console.WriteLine("Choose the pack and monster you want to attack.");
                         Game.DisplayPacks(packs);
-                        int pack_choice = int.Parse(Console.ReadKey().KeyChar.ToString()) - 1; // 0 indexed
+                        int pack_choice = 0;
+                        //if (mode == 0)
+                        //{
+                            pack_choice = int.Parse(Console.ReadKey().KeyChar.ToString()) - 1; // 0 indexed
+                        //    player.AddNextCommand(choice);
+                        //}
+                        //else
+                        //    pack_choice = player.GetNextCommand();                                  
                         Game.DisplayMonsters(packs[pack_choice].members);
-                        int monster_choice = int.Parse(Console.ReadKey().KeyChar.ToString()) - 1;
+                        int monster_choice = 0;
+                        //if (mode == 0)
+                        //{
+                            monster_choice = int.Parse(Console.ReadKey().KeyChar.ToString()) - 1;
+                        //    player.AddNextCommand(choice);
+                        //}
+                        //else
+                        //    monster_choice = player.GetNextCommand();
                         Monster monster = packs[pack_choice].members[monster_choice];
                         commands.AttackMonster(player, monster);
 
