@@ -14,12 +14,15 @@ namespace STVRogue.GameLogic
         public void Move(Player player, Node n)
         {
             writer?.WriteLine("move " + n.id);
-            if (player.location is Bridge bridge) // Up player level when entering new zone
+            if (player.location.GetType().Name == "Bridge") // Up player level when entering new zone
+            {
+                Bridge bridge = player.location as Bridge;
                 if (bridge.toNodes.Contains(n))
                 {
                     player.level++;
                     Dungeon.alert = 0; // Reset alarm
                 }
+            }
             player.location = n;
             // Pick up items and remove from node
             foreach (Item item in n.items)
