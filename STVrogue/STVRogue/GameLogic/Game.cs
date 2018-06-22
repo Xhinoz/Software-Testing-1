@@ -14,8 +14,9 @@ namespace STVRogue.GameLogic
         public List<Pack> monsterPacks;
         private Predicates predicates;
         public bool validGame;
-        public bool lastTurn = false;
+        public static bool lastTurn = false;
         public bool combat = false;
+        public static Game game;
 
         /* This creates a player and a random dungeon of the given difficulty level and node-capacity
          * The player is positioned at the dungeon's starting-node.
@@ -28,6 +29,7 @@ namespace STVRogue.GameLogic
         //create a game until a valid one is made
         public Game(uint difficultyLevel, uint nodeCapcityMultiplier, uint numberOfMonsters)
         {
+            game = this;
             predicates = new Predicates();
             items = new List<Item>();
             monsterPacks = new List<Pack>();
@@ -211,8 +213,13 @@ namespace STVRogue.GameLogic
 
             GUI(userCommand);
             if (player.location == dungeon.exitNode)
+            {
                 Console.WriteLine("Congratulations, you've succeeded and beat the dungeon!");
-
+                if (UI.writer != null)
+                    Environment.Exit(0);
+                UI.ReadKey();
+                return false;
+            }
             // Cleans up all monsters that died
             for (int t = monsterPacks.Count - 1; t >= 0; t--)
                 if (monsterPacks[t].members.Count == 0)
@@ -297,16 +304,16 @@ namespace STVRogue.GameLogic
         public void GUI(Command command)
         {
             Console.WriteLine("What would you like to do next? \n1) Move to a node. \n2) Use a healing potion. \n3) Do nothing.");
-            ConsoleKeyInfo info = Console.ReadKey();
+            char info = UI.ReadKey();
             Console.WriteLine("");
             int choice;
-            switch (info.KeyChar)
+            switch (info)
             {
                 case '1':
                     // display neighbour nodes
                     DisplayPaths(player);
-                    info = Console.ReadKey(); Console.WriteLine();
-                    choice = int.Parse(info.KeyChar.ToString());
+                    info = UI.ReadKey(); Console.WriteLine();
+                    choice = int.Parse(info.ToString());
                     Node destination = player.location.neighbors[choice - 1]; // Using 1-9, not 0-9
                     command.Move(player, destination);
                     break;
@@ -315,8 +322,8 @@ namespace STVRogue.GameLogic
                     // display inventory
                     int bag = player.DisplayInventory();
                     Console.WriteLine("1) Use Healingpotion.");
-                    info = Console.ReadKey(); Console.WriteLine();
-                    choice = int.Parse(info.KeyChar.ToString());
+                    info = UI.ReadKey(); Console.WriteLine();
+                    choice = int.Parse(info.ToString());
                     if (choice == 1 && (bag == 1 || bag == 3))   // use command item       
                         command.UseItem(player, choice);
                     else if (choice != 1 && choice != 2)
@@ -328,7 +335,7 @@ namespace STVRogue.GameLogic
                     {
                         Console.WriteLine("You have no potions in your inventory.");
                         Console.WriteLine("1) Move to a node. \n2) Do nothing.");
-                        choice = int.Parse(Console.ReadKey().KeyChar.ToString()); Console.WriteLine();
+                        choice = int.Parse(UI.ReadKey().ToString()); Console.WriteLine();
                         if (choice == 1)
                             goto case '1';
                         else if (choice == 2)

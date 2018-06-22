@@ -264,14 +264,15 @@ namespace STVRogue.GameLogic
                 Console.WriteLine("You have {0} health.", player.HP);
                 Console.WriteLine("1) Flee. \n2) Use item in your inventory and attack. \n3) Attack a monster.");
                 // Flee, item > attack, attack
-                int choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                char c = UI.ReadKey();
+                int choice = int.Parse(c.ToString());
 
                 switch (choice)
                 { // Flee
                     case 1:
                         // Choice
                         Game.DisplayPaths(player);
-                        choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        choice = int.Parse(UI.ReadKey().ToString());
                         Node destination = neighbors[choice - 1];
                         commands.Move(player, destination);
                         break;
@@ -280,7 +281,7 @@ namespace STVRogue.GameLogic
                         // Choice
                         int bag = player.DisplayInventory();
                         Console.WriteLine("1) Healingpotion \n2) Crystal");
-                        choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                        choice = int.Parse(UI.ReadKey().ToString());
                         if (choice == 1 && (bag == 1 || bag == 3))
                             commands.UseItem(player, choice);
                         else if (choice == 2 && (bag == 2 || bag == 3))
@@ -297,7 +298,7 @@ namespace STVRogue.GameLogic
                         {
                             Console.WriteLine("You don't have the item in your inventory!");
                             Console.WriteLine("1) Flee \n2) Attack");
-                            choice = int.Parse(Console.ReadKey().KeyChar.ToString());
+                            choice = int.Parse(UI.ReadKey().ToString());
                             if (choice == 1)
                                 goto case 1;
                         }
@@ -309,9 +310,9 @@ namespace STVRogue.GameLogic
                         // GUI Monster choice 
                         Console.WriteLine("Choose the pack and monster you want to attack.");
                         Game.DisplayPacks(packs);
-                        int pack_choice = int.Parse(Console.ReadKey().KeyChar.ToString()) - 1; // 0 indexed
+                        int pack_choice = int.Parse(UI.ReadKey().ToString()) - 1; // 0 indexed
                         Game.DisplayMonsters(packs[pack_choice].members);
-                        int monster_choice = int.Parse(Console.ReadKey().KeyChar.ToString()) - 1;
+                        int monster_choice = int.Parse(UI.ReadKey().ToString()) - 1;
                         Monster monster = packs[pack_choice].members[monster_choice];
                         commands.AttackMonster(player, monster);
 

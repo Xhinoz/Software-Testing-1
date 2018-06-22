@@ -12,45 +12,30 @@ namespace STVRogue.GameLogic
 {
     public class GamePlay
     {
-        public string[] gamedata;
-        public uint turn;
         Game g;
-        Command command;
+        private string filename;
+
         public GamePlay(string filename) //load a game to gamedata
         {
-            command = new Command();
-            gamedata = File.ReadAllLines( @"..\..\..\testruns\" + filename); //0 = seed , 1 2 3 init variables for game
-            turn = 0;
-            RandomGenerator.initializeWithSeed(Int32.Parse(gamedata[0]));
-            g = new Game(UInt32.Parse(gamedata[1]), UInt32.Parse(gamedata[2]), UInt32.Parse(gamedata[3]));
+            this.filename = filename;
+            Console.SetIn(new StreamReader(@"..\..\..\testruns\" + filename));
+            RandomGenerator.initializeWithSeed((int)readUInt());
+            g = new Game(readUInt(), readUInt(), readUInt());
         }
 
-
+        private uint readUInt()
+        {
+            return uint.Parse(Console.ReadLine());
+        }
 
         public bool Replay(Specification S)
         {
+            UI.spec = S;
             Reset();
-            while(true)
-            {
-                //test specifation holds in current state
-                g.lastTurn = turn >= gamedata.Length - 4;
-                bool ok = S.test(getState());
-
-                //if specification holds true continue to next turn
-                if(ok)
-                {
-                    if (g.lastTurn)
-                        break;
-                    else
-                        replayTurn();
-                
-                }
-                else
-                {
+            while (g.update(new Command()))
+                if (!UI.result)
                     return false;
-                }
-            }
-            return true;
+            return UI.result;
         }
 
 
@@ -61,10 +46,12 @@ namespace STVRogue.GameLogic
 
         public void Reset() // reset game to turn 0
         {
-            turn = 0;
+            Console.SetIn(new StreamReader(@"..\..\..\testruns\" + filename));
+            for (int i = 0; i < 4; i++)
+                Console.ReadLine();
         }
 
-        public void replayTurn() // replay current turn then advance
+        /*public void replayTurn() // replay current turn then advance
         {
             uint t = turn + 4; //turns start from 4 in the array
             if (gamedata[t].Contains("move"))
@@ -77,6 +64,6 @@ namespace STVRogue.GameLogic
                 command.AttackMonster(g.player, g.LookUpMonster(gamedata[t].Split(' ')[1]));
             
             turn++;
-        }
+        }*/
     }
 }

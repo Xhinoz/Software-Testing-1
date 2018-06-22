@@ -63,7 +63,7 @@ namespace STVRogue.GameLogic
         {
             pre = pre || p(g);
             post = post || q(g);
-            return !g.lastTurn || !pre || post;
+            return !Game.lastTurn || !pre || post;
         }
     }
 
@@ -85,7 +85,7 @@ namespace STVRogue.GameLogic
         {
             pre = pre && s.test(g);
             post = post && s.test(g);
-            return !g.lastTurn || !pre || post;
+            return !Game.lastTurn || !pre || post;
         }
     }
 }

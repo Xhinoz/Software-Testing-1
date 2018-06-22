@@ -18,7 +18,9 @@ namespace STVRogue
             uint monsters = 80;
 
             Game game = new Game(diff, multi, monsters);
-            StreamWriter sw = new StreamWriter(@"..\..\..\testruns\test.txt", false);
+            Console.WriteLine("Choose a file name.");
+            string filename = Console.ReadLine();
+            StreamWriter sw = new StreamWriter(@"..\..\..\testruns\" + filename, false);
             sw.AutoFlush = true;
 
             int seed = RandomGenerator.rnd.Next(10000000);
@@ -28,12 +30,12 @@ namespace STVRogue
             sw.WriteLine(diff);
             sw.WriteLine(multi);
             sw.WriteLine(monsters);
-
+            UI.writer = sw;
             // game.player.location = new Node("a dummy node");
             while (true)
             {
-                // Console.ReadKey();
-                game.update(new Command(sw));
+                // UI.ReadKey();
+                game.update(new Command());
             }
             
         }
