@@ -1,11 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using STVRogue.Utils;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace STVRogue.GameLogic
 {
+    [TestClass]
     public class MSTestRules
     {
         [TestMethod]
@@ -20,8 +20,25 @@ namespace STVRogue.GameLogic
             testAlways(pNode);
         }
 
+        //Zone will remain on alert until the player leaves the zone
         [TestMethod]
         public void RAlert()
+        {
+            GamePlay[] runs = loadRuns();
+            foreach (var run in runs)
+            {
+                uint level = run.getState().dungeon.difficultyLevel;
+                for (int i = 1; i <= level + 1; i++)
+                {
+                    var s = new Unless(_ => Dungeon.alert == i, g => g.player.level != i);
+                    Assert.IsTrue(run.Replay(s));
+                }
+            }
+        }
+
+        //When on alert, monster packs will not move away from the player
+        [TestMethod]
+        public void RAlert2()
         {
             testAlways(pAlert);
         }
@@ -46,7 +63,7 @@ namespace STVRogue.GameLogic
 
         private void testAlways(Predicate<Game> p)
         {
-            List<GamePlay> runs = loadRunds("test.txt");
+            GamePlay[] runs = loadRuns();
             foreach (var run in runs)
                 Assert.IsTrue(run.Replay(new Always(p)));
         }
@@ -55,7 +72,7 @@ namespace STVRogue.GameLogic
         Closures are needed for some of the predicates, so different function type requested.*/
         private void testImplies(Func<Game, Predicate<Game>> p, Func<Game, Predicate<Game>> q)
         {
-            List<GamePlay> runs = loadRunds("test.txt");
+            GamePlay[] runs = loadRuns();
             int i = 0;
             foreach (var run in runs)
             {
@@ -156,15 +173,14 @@ namespace STVRogue.GameLogic
             return Dungeon.shortestpath(u, p.location).Count;
         }
 
-        private List<GamePlay> loadRunds(params string[] files)
+        private GamePlay[] loadRuns(params string[] files)
         {
-            List<GamePlay> gp = new List<GamePlay>();
-            foreach (string s in files)
-            {
-                gp.Add(new GamePlay(s));
-            }
-
-            return gp;
+            if (files.Length == 0)
+                files = Directory.EnumerateFiles(@"..\..\..\testruns\").Select(s => Path.GetFileName(s)).OrderBy(x => x).ToArray();
+            GamePlay[] gps = new GamePlay[files.Length];
+            for (int i = 0; i < files.Length; i++)
+                gps[i] = new GamePlay(files[i]);
+            return gps;
         }
       
     }

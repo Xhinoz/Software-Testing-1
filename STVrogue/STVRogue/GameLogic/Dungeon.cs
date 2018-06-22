@@ -189,10 +189,9 @@ namespace STVRogue.GameLogic
         /*To calculate the actual level without the weird "every node that isn't a Bridge is 0" rule*/
         public uint nodeLevel(Node d)
         {
-            uint result = level(shortestpath(d, exitNode).FirstOrDefault(n => n is Bridge));
-            if (result == 0)
-                result = difficultyLevel + 1;
-            return result;
+            if (d is Bridge)
+                return level(d);
+            return level(shortestpath(d, startNode).FirstOrDefault(n => n is Bridge)) + 1;
         }
 
         /*To calculate the remaining capacity of a node*/
